@@ -4,9 +4,9 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Map as MapIcon, LayoutGrid, Info, Search } from "lucide-react";
 
-import ProjectMap from "../components/map/project-map";
-import ProjectFilters from "../components/projects/project-filters";
-import ProjectCard from "../components/projects/project-card";
+import ProjectMap from "@/components/map/project-map";
+import ProjectFilters from "@/app/projects/project-filters";
+import ProjectCard from "@/app/projects/project-card";
 import { MOCK_PROJECTS } from "../../lib/mock-project";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 

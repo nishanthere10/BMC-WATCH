@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, Filter } from "lucide-react";
+import { Search } from "lucide-react";
 import { 
   Select, 
   SelectContent, 
@@ -20,7 +20,7 @@ export default function ProjectFilters({
   onSearchChange,
   onTypeChange,
   onStatusChange,
-}) {
+}: ProjectFiltersProps) {
   return (
     <div className="flex flex-col md:flex-row gap-4 mb-8 bg-card p-4 rounded-xl border shadow-sm">
       <div className="relative flex-1">

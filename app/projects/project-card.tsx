@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MapPin, HardHat, CircleDollarSign, ArrowRight } from "lucide-react";
-import { Project } from "../../types/project";
+import type { Project } from "@/types/project";
 import { cn } from "@/lib/utils";
 
 // Helper for status colors
@@ -29,9 +29,11 @@ export default function ProjectCard({ project }: ProjectCardProps) {
     >
       {/* Image Header */}
       <div className="relative h-48 w-full overflow-hidden">
-        <img
+        <Image
           src={project.images[0]}
           alt={project.title}
+          width={400}
+          height={200}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute top-3 left-3">

@@ -7,7 +7,6 @@ import "leaflet/dist/leaflet.css";
 import { Project } from "../../types/project";
 import Link from "next/link";
 import { ExternalLink, Percent } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 // Fix for default Leaflet marker icons in Next.js
 const DefaultIcon = L.icon({
@@ -26,6 +25,7 @@ export default function ProjectMap({ projects }: ProjectMapProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
