@@ -1,9 +1,13 @@
-import { ProjectUpdate } from "@/types/project";
 import { CheckCircle2, Circle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+export interface ProjectUpdate {
+  date: string;
+  text: string;
+}
+
 export default function ProjectTimeline({ updates }: { updates: ProjectUpdate[] }) {
-  if (updates.length === 0) {
+  if (!updates || updates.length === 0) {
     return (
       <div className="p-8 text-center rounded-2xl border border-dashed border-slate-200 dark:border-slate-700/50 bg-slate-50/30 dark:bg-slate-800/20">
         <p className="text-[#64748B] dark:text-slate-500 text-sm font-medium">No official updates posted yet.</p>

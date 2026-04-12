@@ -17,12 +17,16 @@ export default function PhotoUpload({ onChange, error }: PhotoUploadProps) {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Revoke previous blob URL to prevent memory leaks
+      if (preview) URL.revokeObjectURL(preview);
       setPreview(URL.createObjectURL(file));
       onChange(file);
     }
   };
 
   const removePhoto = () => {
+    // Revoke blob URL to prevent memory leaks
+    if (preview) URL.revokeObjectURL(preview);
     setPreview(null);
     onChange(null);
     if (fileInputRef.current) fileInputRef.current.value = "";

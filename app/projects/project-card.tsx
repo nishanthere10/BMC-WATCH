@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { MapPin, HardHat, CircleDollarSign, ArrowRight } from "lucide-react";
 import type { Project } from "@/types/project";
+import { getProjectImage } from "@/types/project";
 import { cn } from "@/lib/utils";
 
 const statusStyles: Record<string, string> = {
@@ -21,11 +22,15 @@ const progressColors: Record<string, string> = {
   "Planned": "bg-gradient-to-r from-slate-400 to-slate-500",
 };
 
-interface ProjectCardProps {
-  project: Project;
-}
+export default function ProjectCard({ project }: { project: Project }) {
+  const progress = project.progress_percent ?? 0;
+  const status = project.status || "Planned";
+  const imageSrc = getProjectImage(project.type);
+  // Convert budget from raw number to Crores (if > 10M) or Lakhs
+  const budgetCr = project.sanctioned_budget
+    ? (project.sanctioned_budget / 10000000).toFixed(1)
+    : "0";
 
-export default function ProjectCard({ project }: ProjectCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -34,10 +39,10 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       className="group overflow-hidden rounded-2xl bg-white/75 dark:bg-slate-900/75 backdrop-blur-xl border border-white/60 dark:border-slate-700/50 shadow-[0_4px_20px_rgba(15,23,42,0.06)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_12px_40px_rgba(37,99,235,0.12)] dark:hover:shadow-[0_12px_40px_rgba(56,189,248,0.08)] transition-all duration-300"
     >
       {/* Image Header */}
-      <div className="relative h-48 w-full overflow-hidden">
+      <div className="relative h-48 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
         <Image
-          src={project.images[0]}
-          alt={project.title}
+          src={imageSrc}
+          alt={project.title || "Project"}
           width={400}
           height={200}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -48,14 +53,14 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         <div className="absolute top-3 left-3">
           <span className={cn(
             "px-3 py-1 rounded-full text-xs font-bold border backdrop-blur-sm",
-            statusStyles[project.status]
+            statusStyles[status] || statusStyles["Planned"]
           )}>
-            {project.status}
+            {status}
           </span>
         </div>
         {/* Ward */}
         <p className="absolute bottom-3 left-3 text-white text-xs font-semibold flex items-center gap-1">
-          <MapPin size={12} /> {project.ward} Ward
+          <MapPin size={12} /> {project.ward || "N/A"} Ward
         </p>
       </div>
 
@@ -63,23 +68,23 @@ export default function ProjectCard({ project }: ProjectCardProps) {
       <div className="p-5 space-y-4">
         <div>
           <h3 className="font-bold text-base leading-snug text-[#0F172A] dark:text-white group-hover:text-[#2563EB] dark:group-hover:text-[#38BDF8] transition-colors">
-            {project.title}
+            {project.title || "Untitled Project"}
           </h3>
-          <p className="text-[#64748B] dark:text-slate-400 text-sm line-clamp-1 mt-1">{project.location}</p>
+          <p className="text-[#64748B] dark:text-slate-400 text-sm line-clamp-1 mt-1">{project.location || "Location not specified"}</p>
         </div>
 
         {/* Progress */}
         <div className="space-y-1.5">
           <div className="flex justify-between text-xs font-semibold text-[#64748B] dark:text-slate-400">
             <span>Completion</span>
-            <span className="text-[#0F172A] dark:text-white font-bold">{project.completionPercent}%</span>
+            <span className="text-[#0F172A] dark:text-white font-bold">{progress}%</span>
           </div>
           <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
-              animate={{ width: `${project.completionPercent}%` }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className={cn("h-full rounded-full", progressColors[project.status] || progressColors["Planned"])}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 1, ease: "easeOut" as const }}
+              className={cn("h-full rounded-full", progressColors[status] || progressColors["Planned"])}
             />
           </div>
         </div>
@@ -90,14 +95,14 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             <p className="text-[10px] uppercase tracking-widest text-[#64748B] dark:text-slate-500 font-bold">Budget</p>
             <p className="text-sm font-bold text-[#0F172A] dark:text-white flex items-center gap-1.5">
               <CircleDollarSign size={14} className="text-[#2563EB] dark:text-[#38BDF8]" />
-              ₹{project.budgetSanctioned} Cr
+              ₹{budgetCr} Cr
             </p>
           </div>
           <div className="space-y-0.5">
             <p className="text-[10px] uppercase tracking-widest text-[#64748B] dark:text-slate-500 font-bold">Contractor</p>
             <p className="text-sm font-bold text-[#0F172A] dark:text-white flex items-center gap-1.5 truncate">
               <HardHat size={14} className="text-[#2563EB] dark:text-[#38BDF8] shrink-0" />
-              <span className="truncate">{project.contractorName.split(" ")[0]}...</span>
+              <span className="truncate">{project.contractor ? project.contractor.split(" ").slice(0, 2).join(" ") : "N/A"}</span>
             </p>
           </div>
         </div>

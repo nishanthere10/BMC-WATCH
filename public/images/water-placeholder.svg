@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#eff6ff"/>
+      <stop offset="100%" style="stop-color:#e0f2fe"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" fill="url(#bg)"/>
+  <g transform="translate(400,180)" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M0 -25 C-10 -15 -20 -5 -20 5 C-20 16 -11 25 0 25 C11 25 20 16 20 5 C20 -5 10 -15 0 -25"/>
+    <circle cx="0" cy="8" r="6"/>
+  </g>
+  <text x="400" y="240" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" font-weight="600" fill="#0ea5e9">Water Line Project</text>
+</svg>

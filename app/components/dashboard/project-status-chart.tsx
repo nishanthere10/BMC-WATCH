@@ -53,13 +53,13 @@ export default function ProjectStatusChart({ data }: { data: TypeStat[] }) {
             fontWeight: 600,
             boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
           }}
-          formatter={(value: number, name: string) => [`${value} projects`, name]}
+          formatter={(value, name) => [`${value} projects`, name]}
         />
         <Legend
           verticalAlign="bottom"
           iconType="circle"
           iconSize={8}
-          formatter={(value: string) => (
+          formatter={(value) => (
             <span className="text-xs font-semibold text-slate-600">{value}</span>
           )}
         />

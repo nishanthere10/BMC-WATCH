@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Send, Sparkles } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
 
 import { reportSchema, ReportFormValues } from "@/lib/report-schema";
 import { uploadReportImage } from "@/lib/upload-report-image";
@@ -12,16 +13,16 @@ import { supabase } from "@/lib/supabase";
 import RatingSelector from "./rating-selector";
 import IssueTypeSelect from "./issue-type-select";
 import PhotoUpload from "./photo-upload";
-import AIAnalysisCard from "../ai/ai-analysis-card";
-import AIAnalysisLoading from "../ai/ai-analysis-loading";
-import AIAnalysisAlert from "../ai/ai-analysis-alert";
+import AIAnalysisCard from "@/app/ai/ai-analysis-card";
+import AIAnalysisLoading from "@/app/ai/ai-analysis-loading";
+import AIAnalysisAlert from "@/app/ai/ai-analysis-alert";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 interface ReportFormProps {
   projectId: string;
-  onSuccess: (reportData: any) => void;
+  onSuccess: (reportData: { issue_type: string }) => void;
 }
 
 export default function ReportForm({ projectId, onSuccess }: ReportFormProps) {
@@ -29,7 +30,14 @@ export default function ReportForm({ projectId, onSuccess }: ReportFormProps) {
   
   // AI Analysis States
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [aiAnalysis, setAiAnalysis] = useState<string[] | null>(null);
+  const [aiAnalysis, setAiAnalysis] = useState<{
+    diagnosis_summary: string;
+    what_is_good: string[];
+    what_is_faulty: string[];
+    what_is_missing: string[];
+    severity_level: "Low" | "Medium" | "High";
+    opinion_starter: string;
+  } | null>(null);
   const [aiError, setAiError] = useState<string | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
@@ -97,9 +105,13 @@ export default function ReportForm({ projectId, onSuccess }: ReportFormProps) {
 
       if (error) throw error;
       onSuccess(report);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Submission failed:", error);
-      alert("Failed to submit report.");
+      if (error.message?.includes("STORAGE_MISSING")) {
+        alert(error.message);
+      } else {
+        alert("Failed to submit report. Please try again or check console for details.");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -132,10 +144,11 @@ export default function ReportForm({ projectId, onSuccess }: ReportFormProps) {
 
       {/* AI Analysis Feedback Area */}
       <AnimatePresence mode="wait">
-        {isAnalyzing && <AIAnalysisLoading />}
-        {aiAnalysis && <AIAnalysisCard analysis={aiAnalysis} />}
+        {isAnalyzing && <AIAnalysisLoading key="ai-loading" />}
+        {aiAnalysis && <AIAnalysisCard key="ai-result" analysis={aiAnalysis} />}
         {aiError && (
-          <AIAnalysisAlert 
+          <AIAnalysisAlert
+            key="ai-error"
             error={aiError} 
             onRetry={() => {
               // Logic to retry could go here if needed

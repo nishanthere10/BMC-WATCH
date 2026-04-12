@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 const fadeUpVariant = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
 };
 
 export default function Home() {
@@ -70,7 +70,7 @@ export default function Home() {
           </motion.div>
 
           {/* Graphical Mockup Column */}
-          <div className="relative w-full h-[500px] flex items-center justify-center perspective-1000 hidden md:flex">
+          <div className="relative w-full h-[500px] hidden md:flex items-center justify-center">
             
             {/* Background Glow under cards */}
             <div className="absolute inset-0 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[100px]"></div>
@@ -94,7 +94,7 @@ export default function Home() {
               </div>
               <div className="flex-1 bg-slate-100 dark:bg-slate-800 rounded-2xl overflow-hidden relative">
                 {/* Abstract Data Map UI */}
-                <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] mix-blend-overlay"></div>
+                <div className="absolute inset-0 opacity-10 bg-[repeating-linear-gradient(45deg,_transparent,_transparent_10px,_rgba(37,99,235,0.1)_10px,_rgba(37,99,235,0.1)_20px)] mix-blend-overlay"></div>
                 <div className="absolute left-1/3 top-1/3 w-3 h-3 bg-[#2563EB] rounded-full animate-ping"></div>
                 <div className="absolute left-1/3 top-1/3 w-3 h-3 bg-[#2563EB] rounded-full shadow-[0_0_15px_#2563EB]"></div>
                 

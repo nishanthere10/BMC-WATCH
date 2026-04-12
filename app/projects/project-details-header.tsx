@@ -28,14 +28,15 @@ const statusConfig: Record<string, { pill: string; dot: string; label: string }>
 };
 
 export default function ProjectDetailsHeader({ project }: { project: Project }) {
-  const config = statusConfig[project.status] ?? statusConfig["Planned"];
+  const status = project.status || "Planned";
+  const config = statusConfig[status] ?? statusConfig["Planned"];
 
   return (
     <div className="space-y-5">
       {/* Badges row */}
       <div className="flex flex-wrap items-center gap-2.5">
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border bg-slate-100/80 dark:bg-slate-800/50 text-[#64748B] dark:text-slate-300 border-slate-200/50 dark:border-slate-700/30 backdrop-blur-sm">
-          <Tag size={11} /> {project.type}
+          <Tag size={11} /> {project.type || "Infrastructure"}
         </span>
         <span className={cn(
           "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border backdrop-blur-sm",
@@ -48,7 +49,7 @@ export default function ProjectDetailsHeader({ project }: { project: Project }) 
 
       {/* Title */}
       <h1 className="text-3xl md:text-4xl font-black tracking-tight text-[#0F172A] dark:text-white leading-tight">
-        {project.title}
+        {project.title || "Untitled Project"}
       </h1>
 
       {/* Meta info row */}
@@ -58,7 +59,7 @@ export default function ProjectDetailsHeader({ project }: { project: Project }) 
             <MapPin size={14} className="text-[#2563EB] dark:text-[#38BDF8]" />
           </div>
           <span className="text-sm font-semibold text-[#334155] dark:text-slate-300">
-            {project.location} · Ward {project.ward}
+            {project.location || "Unknown Location"} · Ward {project.ward || "N/A"}
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -66,7 +67,7 @@ export default function ProjectDetailsHeader({ project }: { project: Project }) 
             <Calendar size={14} className="text-[#2563EB] dark:text-[#38BDF8]" />
           </div>
           <span className="text-sm font-semibold text-[#334155] dark:text-slate-300">
-            Started {project.startDate}
+            Started {project.start_date ? new Date(project.start_date).toLocaleDateString() : "TBD"}
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -74,7 +75,7 @@ export default function ProjectDetailsHeader({ project }: { project: Project }) 
             <HardHat size={14} className="text-[#2563EB] dark:text-[#38BDF8]" />
           </div>
           <span className="text-sm font-semibold text-[#334155] dark:text-slate-300">
-            {project.contractorName}
+            {project.contractor || "Contractor Unassigned"}
           </span>
         </div>
       </div>

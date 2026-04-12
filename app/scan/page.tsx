@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Scan, Keyboard, QrCode } from "lucide-react";
 import ProjectCard from "@/app/projects/project-card";
@@ -8,13 +8,28 @@ import QRScanner from "@/components/QR/qr-scanner";
 import ManualProjectEntry from "@/components/QR/manual-project-entry";
 import ScannerStatus from "@/components/QR/scanner-status";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MOCK_PROJECTS } from "@/lib/mock-project";
+import { getProjectById } from "@/lib/projects";
+import type { Project } from "@/types/project";
 
 export default function ScanPage() {
   const [status, setStatus] = useState<"idle" | "scanning" | "success" | "error">("idle");
   const [previewId, setPreviewId] = useState<string>("");
+  const [previewProject, setPreviewProject] = useState<Project | null>(null);
+  const [isLoadingProject, setIsLoadingProject] = useState(false);
 
-  const previewProject = MOCK_PROJECTS.find((p) => p.id === previewId) || null;
+  useEffect(() => {
+    async function fetchPreview() {
+      if (!previewId) {
+        setPreviewProject(null);
+        return;
+      }
+      setIsLoadingProject(true);
+      const project = await getProjectById(previewId);
+      setPreviewProject(project);
+      setIsLoadingProject(false);
+    }
+    fetchPreview();
+  }, [previewId]);
 
   const handleScanSuccess = (decodedText: string) => {
     setStatus("success");

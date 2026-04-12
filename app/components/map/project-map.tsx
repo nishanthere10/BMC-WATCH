@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Project } from "../../types/project";
+import { Project } from "@/types/project";
 import Link from "next/link";
 import { ExternalLink, Percent } from "lucide-react";
 
@@ -45,21 +45,23 @@ export default function ProjectMap({ projects }: ProjectMapProps) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {projects.map((project) => (
+        {projects
+          .filter((project) => project.latitude !== null && project.longitude !== null)
+          .map((project) => (
           <Marker 
             key={project.id} 
-            position={[project.latitude, project.longitude]}
+            position={[project.latitude!, project.longitude!]}
           >
             <Popup className="project-popup">
               <div className="p-1 min-w-[180px]">
-                <h4 className="font-bold text-sm leading-tight mb-1">{project.title}</h4>
+                <h4 className="font-bold text-sm leading-tight mb-1">{project.title || "Untitled"}</h4>
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-[10px] bg-secondary px-1.5 py-0.5 rounded text-secondary-foreground font-semibold">
-                    Ward {project.ward}
+                    Ward {project.ward || "N/A"}
                   </span>
                   <div className="flex items-center gap-1 text-[10px] font-bold text-primary">
                     <Percent size={10} />
-                    {project.completionPercent}%
+                    {project.progress_percent || 0}%
                   </div>
                 </div>
                 

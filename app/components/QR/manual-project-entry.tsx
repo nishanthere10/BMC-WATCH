@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { MOCK_PROJECTS } from "../../../lib/mock-project";
+import { projectExists } from "@/lib/projects";
 
 interface ManualProjectEntryProps {
   previewId?: string;
@@ -21,13 +21,14 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleManualSubmit = (e: React.FormEvent) => {
+  const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
 
     // Clean input to strip letters/symbols in case user types "ID: 5"
-    const cleanId = projectId.replace(/\D/g, '');
+    // Wait, the new Supabase IDs are UUIDs (strings) like "proj_...". We shouldn't strip letters!
+    const cleanId = projectId.trim();
 
     if (!cleanId) {
       setError("Please enter a Project ID.");
@@ -35,14 +36,11 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
       return;
     }
 
-    // Check if project exists in mock data
-    const projectExists = MOCK_PROJECTS.some((p) => p.id === cleanId);
+    // Check if project exists in database
+    const exists = await projectExists(cleanId);
 
-    if (projectExists) {
-      // Simulate a small loading state for UX "feel"
-      setTimeout(() => {
-        router.push(`/projects/${cleanId}`);
-      }, 600);
+    if (exists) {
+      router.push(`/projects/${cleanId}`);
     } else {
       setError(
         "Project ID not found. Please check the code on the site board.",
@@ -73,8 +71,7 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
             onChange={(e) => {
               const rawValue = e.target.value;
               setProjectId(rawValue);
-              // Send the cleaned ID so the UI slide instantly responds to "ID: 5"
-              const cleanId = rawValue.replace(/\D/g, '');
+              const cleanId = rawValue.trim();
               onPreviewIdChange?.(cleanId);
               setError(null);
             }}
@@ -126,10 +123,11 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
 
       <div className="mt-6 pt-6 border-t border-dashed">
         <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-2">
-          Hackathon Tips:
+          Try these IDs:
         </p>
         <div className="flex flex-wrap gap-2">
-          {["1", "2", "4", "8"].map((id) => (
+          {/* Fallback tip, the actual IDs are long UUIDs now so clicking generic numbers won't work in prod, but left for structure */}
+          {["1", "2"].map((id) => (
             <button
               key={id}
               onClick={() => {
