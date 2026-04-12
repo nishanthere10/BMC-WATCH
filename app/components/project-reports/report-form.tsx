@@ -3,50 +3,43 @@
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Send, Sparkles } from "lucide-react";
+import { Loader2, Star } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 
-import { reportSchema, ReportFormValues } from "@/lib/report-schema";
+import { ratingSchema, RatingFormValues } from "@/lib/report-schema";
 import { uploadReportImage } from "@/lib/upload-report-image";
 import { supabase } from "@/lib/supabase";
 
 import RatingSelector from "./rating-selector";
-import IssueTypeSelect from "./issue-type-select";
 import PhotoUpload from "./photo-upload";
 import AIAnalysisCard from "@/app/ai/ai-analysis-card";
+import type { AIVerdict } from "@/app/ai/ai-analysis-card";
 import AIAnalysisLoading from "@/app/ai/ai-analysis-loading";
 import AIAnalysisAlert from "@/app/ai/ai-analysis-alert";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-interface ReportFormProps {
+interface RatingFormProps {
   projectId: string;
-  onSuccess: (reportData: { issue_type: string }) => void;
+  onSuccess: (data: { rating: number; points: number }) => void;
 }
 
-export default function ReportForm({ projectId, onSuccess }: ReportFormProps) {
+export default function ProjectRatingForm({ projectId, onSuccess }: RatingFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // AI Analysis States
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [aiAnalysis, setAiAnalysis] = useState<{
-    diagnosis_summary: string;
-    what_is_good: string[];
-    what_is_faulty: string[];
-    what_is_missing: string[];
-    severity_level: "Low" | "Medium" | "High";
-    opinion_starter: string;
-  } | null>(null);
+  const [aiAnalysis, setAiAnalysis] = useState<AIVerdict | null>(null);
   const [aiError, setAiError] = useState<string | null>(null);
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
-  const { control, handleSubmit, register, formState: { errors } } = useForm<ReportFormValues>({
-    resolver: zodResolver(reportSchema),
+  const { control, handleSubmit, register, setValue, formState: { errors } } = useForm<RatingFormValues>({
+    resolver: zodResolver(ratingSchema),
     defaultValues: { projectId, rating: 0, comment: "" },
   });
 
-  // This function triggers as soon as the user picks/takes a photo
+  // Trigger AI analysis when photo is selected
   const handlePhotoChange = async (file: File | null) => {
     if (!file) {
       setAiAnalysis(null);
@@ -58,11 +51,11 @@ export default function ReportForm({ projectId, onSuccess }: ReportFormProps) {
     setAiError(null);
 
     try {
-      // 1. Upload to Supabase first to get a public URL for OpenAI
+      // 1. Upload to Supabase to get a public URL for the AI
       const url = await uploadReportImage(file);
       setUploadedImageUrl(url);
 
-      // 2. Call our Internal AI API
+      // 2. Call the AI Auditor API
       const response = await fetch("/api/analyze-photo", {
         method: "POST",
         body: JSON.stringify({ imageUrl: url }),
@@ -73,71 +66,94 @@ export default function ReportForm({ projectId, onSuccess }: ReportFormProps) {
 
       if (data.success) {
         setAiAnalysis(data.analysis);
+        // Auto-fill the AI's suggested rating
+        if (data.analysis.suggested_rating && data.analysis.is_genuine) {
+          setValue("rating", data.analysis.suggested_rating);
+        }
       } else {
         throw new Error(data.error || "AI Analysis failed");
       }
-    } catch (err: any) {
-      setAiError(err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to analyze photo";
+      if (message.includes("STORAGE_MISSING")) {
+        setAiError(message);
+      } else {
+        setAiError(message);
+      }
     } finally {
       setIsAnalyzing(false);
     }
   };
 
-  const onSubmit = async (data: ReportFormValues) => {
+  const onSubmit = async (data: RatingFormValues) => {
+    // Block submission if AI flagged it as spam
+    if (aiAnalysis && !aiAnalysis.is_genuine) {
+      alert("Your photo was not verified as a genuine site photo. Please retake the photo at the actual project site.");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      // We use the already uploadedImageUrl from the handlePhotoChange step
       const finalImageUrl = uploadedImageUrl || await uploadReportImage(data.photo[0]);
+      const pointsAwarded = aiAnalysis?.points_to_award || 0;
 
-      const { data: report, error } = await supabase
-        .from("reports")
+      const { data: _rating, error } = await supabase
+        .from("project_ratings")
         .insert({
           project_id: projectId,
-          issue_type: data.issueType,
+          user_id: (await supabase.auth.getUser()).data.user?.id,
           rating: data.rating,
           comment: data.comment,
           photo_url: finalImageUrl,
-          ai_analysis: aiAnalysis, // Save the AI insights to DB!
-          status: "Submitted",
+          ai_analysis: aiAnalysis,
+          is_genuine: aiAnalysis?.is_genuine ?? false,
+          ai_reasoning: aiAnalysis?.diagnosis_summary || "",
+          points_awarded: pointsAwarded,
+          status: "Verified",
         })
         .select()
         .single();
 
       if (error) throw error;
-      onSuccess(report);
-    } catch (error: any) {
+
+      // Award points via RPC
+      const userId = (await supabase.auth.getUser()).data.user?.id;
+      if (userId && pointsAwarded > 0) {
+        await supabase.rpc("award_points", {
+          p_user_id: userId,
+          p_points: pointsAwarded,
+        });
+      }
+
+      onSuccess({ rating: data.rating, points: pointsAwarded });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "";
       console.error("Submission failed:", error);
-      if (error.message?.includes("STORAGE_MISSING")) {
-        alert(error.message);
+      if (message.includes("STORAGE_MISSING")) {
+        alert(message);
       } else {
-        alert("Failed to submit report. Please try again or check console for details.");
+        alert("Failed to submit rating. Please try again.");
       }
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const isSpam = aiAnalysis && !aiAnalysis.is_genuine;
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <Controller
-        name="issueType"
-        control={control}
-        render={({ field }) => (
-          <IssueTypeSelect value={field.value} onChange={field.onChange} error={errors.issueType?.message} />
-        )}
-      />
-
-      {/* Photo Upload with AI Trigger */}
+      {/* Photo Upload — triggers AI verification */}
       <Controller
         name="photo"
         control={control}
         render={({ field }) => (
-          <PhotoUpload 
+          <PhotoUpload
             error={errors.photo?.message as string}
             onChange={(file) => {
               field.onChange(file ? [file] : []);
-              handlePhotoChange(file); // Trigger AI analysis
-            }} 
+              handlePhotoChange(file);
+            }}
           />
         )}
       />
@@ -149,14 +165,13 @@ export default function ReportForm({ projectId, onSuccess }: ReportFormProps) {
         {aiError && (
           <AIAnalysisAlert
             key="ai-error"
-            error={aiError} 
-            onRetry={() => {
-              // Logic to retry could go here if needed
-            }} 
+            error={aiError}
+            onRetry={() => {}}
           />
         )}
       </AnimatePresence>
 
+      {/* Star Rating */}
       <Controller
         name="rating"
         control={control}
@@ -165,16 +180,34 @@ export default function ReportForm({ projectId, onSuccess }: ReportFormProps) {
         )}
       />
 
+      {/* Comment */}
       <div className="space-y-2">
-        <label className="text-sm font-bold uppercase tracking-wider text-slate-700">Comments</label>
-        <Textarea {...register("comment")} placeholder="Any extra details..." className="min-h-[80px]" />
+        <label className="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+          Your Assessment
+        </label>
+        <Textarea
+          {...register("comment")}
+          placeholder={aiAnalysis?.opinion_starter || "Share your observations about this project..."}
+          className="min-h-[80px]"
+        />
       </div>
 
-      <Button type="submit" className="w-full h-14 text-lg font-bold gap-2" disabled={isSubmitting || isAnalyzing}>
+      {/* Submit Button */}
+      <Button
+        type="submit"
+        className={`w-full h-14 text-lg font-bold gap-2 transition-all ${
+          isSpam
+            ? "bg-slate-300 dark:bg-slate-700 cursor-not-allowed"
+            : "bg-gradient-to-r from-[#2563EB] to-[#38BDF8] hover:from-[#1d4ed8] hover:to-[#0ea5e9] text-white shadow-[0_4px_15px_rgba(37,99,235,0.3)]"
+        }`}
+        disabled={isSubmitting || isAnalyzing || !!isSpam}
+      >
         {isSubmitting ? (
-          <> <Loader2 className="animate-spin" /> Finalizing Report... </>
+          <> <Loader2 className="animate-spin" /> Submitting Evaluation... </>
+        ) : isSpam ? (
+          <> Photo Not Verified </>
         ) : (
-          <> <Send size={20} /> Submit Citizen Report </>
+          <> <Star size={20} /> Submit Project Rating </>
         )}
       </Button>
     </form>

@@ -1,16 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, ArrowLeft, LayoutList, Share2, Sparkles } from "lucide-react";
+import { CheckCircle2, ArrowLeft, LayoutList, Share2, Sparkles, Star, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface ReportSuccessProps {
-  issueType: string;
+interface RatingSuccessProps {
+  rating: number;
+  points: number;
   onBack: () => void;
   onViewFeed: () => void;
 }
 
-export default function ReportSuccess({ issueType, onBack, onViewFeed }: ReportSuccessProps) {
+export default function RatingSuccess({ rating, points, onBack, onViewFeed }: RatingSuccessProps) {
   return (
     <div className="flex flex-col items-center justify-center py-8 text-center space-y-6">
       {/* Glowing Success Icon */}
@@ -31,18 +32,50 @@ export default function ReportSuccess({ issueType, onBack, onViewFeed }: ReportS
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="space-y-2"
+        className="space-y-3"
       >
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100/80 dark:bg-emerald-900/30 border border-emerald-200/40 dark:border-emerald-800/30 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold uppercase tracking-widest mb-2">
-          <Sparkles size={11} /> Logged to BMC Watch
+          <Sparkles size={11} /> AI Verified
         </div>
-        <h2 className="text-2xl font-black tracking-tight text-[#0F172A] dark:text-white">Voice Recorded!</h2>
+        <h2 className="text-2xl font-black tracking-tight text-[#0F172A] dark:text-white">Rating Submitted!</h2>
+
+        {/* Stars */}
+        <div className="flex justify-center gap-1">
+          {[1, 2, 3, 4, 5].map((s) => (
+            <motion.div
+              key={s}
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ delay: 0.4 + s * 0.08, type: "spring", stiffness: 300 }}
+            >
+              <Star
+                size={24}
+                className={s <= rating
+                  ? "fill-amber-400 text-amber-400"
+                  : "text-slate-200 dark:text-slate-700"
+                }
+              />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Points Earned */}
+        {points > 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.9, type: "spring" }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-50 to-amber-100/80 dark:from-amber-900/20 dark:to-amber-800/20 border border-amber-200/60 dark:border-amber-700/30"
+          >
+            <Trophy size={16} className="text-amber-600 dark:text-amber-400" />
+            <span className="text-sm font-black text-amber-700 dark:text-amber-300">
+              +{points} Civic Points Earned!
+            </span>
+          </motion.div>
+        )}
+
         <p className="text-sm text-[#64748B] dark:text-slate-400 font-medium max-w-xs mx-auto leading-relaxed">
-          Your report on{" "}
-          <span className="font-bold text-[#0F172A] dark:text-white px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded-md">
-            {issueType}
-          </span>{" "}
-          has been submitted to the public transparency dashboard.
+          Your evaluation has been recorded on the public transparency dashboard. Thank you for being a responsible citizen!
         </p>
       </motion.div>
 
@@ -57,7 +90,7 @@ export default function ReportSuccess({ issueType, onBack, onViewFeed }: ReportS
           onClick={onViewFeed}
           className="h-12 font-bold gap-2 bg-[#0F172A] dark:bg-white text-white dark:text-[#0F172A] hover:bg-[#2563EB] dark:hover:bg-[#38BDF8] dark:hover:text-white rounded-xl shadow-sm transition-all"
         >
-          <LayoutList size={16} /> View Recent Reports
+          <LayoutList size={16} /> View Community Ratings
         </Button>
         <div className="grid grid-cols-2 gap-3">
           <Button
@@ -77,7 +110,7 @@ export default function ReportSuccess({ issueType, onBack, onViewFeed }: ReportS
       </motion.div>
 
       <p className="text-[10px] text-[#94A3B8] dark:text-slate-600 uppercase font-bold tracking-widest">
-        Transparency Logged on Supabase
+        Transparency Logged on BMC Watch
       </p>
     </div>
   );

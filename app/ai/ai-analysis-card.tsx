@@ -2,17 +2,21 @@
 
 import { motion } from "framer-motion";
 import {
-  Stethoscope, CheckCircle2, XCircle, AlertCircle,
-  MessageSquareQuote, BotMessageSquare
+  ShieldCheck, ShieldX, CheckCircle2, XCircle, AlertCircle,
+  MessageSquareQuote, BotMessageSquare, Star, Sparkles
 } from "lucide-react";
 
-interface AIDiagnosis {
+export interface AIVerdict {
+  is_genuine: boolean;
+  rejection_reason: string | null;
   diagnosis_summary: string;
   what_is_good: string[];
   what_is_faulty: string[];
   what_is_missing: string[];
   severity_level: "Low" | "Medium" | "High";
+  suggested_rating: number;
   opinion_starter: string;
+  points_to_award: number;
 }
 
 const severityConfig = {
@@ -33,7 +37,35 @@ const severityConfig = {
   },
 };
 
-export default function AIAnalysisCard({ analysis }: { analysis: AIDiagnosis }) {
+export default function AIAnalysisCard({ analysis }: { analysis: AIVerdict }) {
+  // Rejected / Spam
+  if (!analysis.is_genuine) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="rounded-2xl bg-red-50/80 dark:bg-red-950/30 border border-red-200/60 dark:border-red-800/40 shadow-lg overflow-hidden"
+      >
+        <div className="flex items-center gap-3 px-5 py-4">
+          <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-900/40 flex items-center justify-center">
+            <ShieldX size={20} className="text-red-600 dark:text-red-400" />
+          </div>
+          <div>
+            <p className="text-sm font-bold text-red-700 dark:text-red-400">Photo Not Verified</p>
+            <p className="text-xs text-red-600/70 dark:text-red-400/70 mt-0.5">
+              {analysis.rejection_reason || "This photo doesn't appear to show a construction site."}
+            </p>
+          </div>
+        </div>
+        <div className="px-5 pb-4">
+          <p className="text-xs text-red-500/70 dark:text-red-400/50">
+            Please take a clear photo of the actual project site to earn civic points.
+          </p>
+        </div>
+      </motion.div>
+    );
+  }
+
   const sev = severityConfig[analysis.severity_level] ?? severityConfig.Medium;
 
   return (
@@ -43,26 +75,50 @@ export default function AIAnalysisCard({ analysis }: { analysis: AIDiagnosis }) 
       transition={{ duration: 0.4, ease: "easeOut" }}
       className={`rounded-2xl bg-white/75 dark:bg-slate-900/75 backdrop-blur-xl border border-white/60 dark:border-slate-700/50 shadow-xl overflow-hidden ${sev.glow}`}
     >
-      {/* Top Bar */}
-      <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 dark:border-slate-800/60 bg-gradient-to-r from-blue-50/80 to-transparent dark:from-blue-950/20 dark:to-transparent">
-        <div className="flex items-center gap-2 text-[#2563EB] dark:text-[#38BDF8]">
-          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-[#2563EB] to-[#38BDF8] flex items-center justify-center shadow-sm">
-            <Stethoscope size={13} className="text-white" />
+      {/* Top Bar — Verified */}
+      <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 dark:border-slate-800/60 bg-gradient-to-r from-emerald-50/80 to-transparent dark:from-emerald-950/20 dark:to-transparent">
+        <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-sm">
+            <ShieldCheck size={13} className="text-white" />
           </div>
-          <span className="text-xs font-bold uppercase tracking-widest">Site Diagnosis</span>
+          <span className="text-xs font-bold uppercase tracking-widest">Verified Site Photo</span>
         </div>
-        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border ${sev.pill}`}>
-          <span className={`w-1.5 h-1.5 rounded-full ${sev.dot}`} />
-          {analysis.severity_level} Severity
-        </span>
+        <div className="flex items-center gap-2">
+          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border ${sev.pill}`}>
+            <span className={`w-1.5 h-1.5 rounded-full ${sev.dot}`} />
+            {analysis.severity_level} Severity
+          </span>
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100/80 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200/50 dark:border-amber-800/30">
+            <Sparkles size={10} /> +{analysis.points_to_award} pts
+          </span>
+        </div>
       </div>
 
       <div className="p-5 space-y-4">
         {/* Summary */}
         <div className="p-3 rounded-xl bg-slate-50/80 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-700/40">
           <p className="text-sm font-semibold text-[#0F172A] dark:text-white leading-snug italic">
-            "{analysis.diagnosis_summary}"
+            &ldquo;{analysis.diagnosis_summary}&rdquo;
           </p>
+        </div>
+
+        {/* AI Suggested Rating */}
+        <div className="flex items-center justify-between bg-blue-50/60 dark:bg-blue-950/20 border border-blue-100/50 dark:border-blue-900/20 p-3 rounded-xl">
+          <div className="flex items-center gap-2">
+            <BotMessageSquare size={14} className="text-blue-600 dark:text-blue-400" />
+            <span className="text-xs font-bold text-blue-700 dark:text-blue-300">AI Suggested Rating</span>
+          </div>
+          <div className="flex gap-0.5">
+            {[1, 2, 3, 4, 5].map((s) => (
+              <Star
+                key={s}
+                size={14}
+                className={s <= analysis.suggested_rating
+                  ? "fill-amber-400 text-amber-400"
+                  : "text-slate-300 dark:text-slate-600"}
+              />
+            ))}
+          </div>
         </div>
 
         {/* Three Checkpoints */}
@@ -91,21 +147,23 @@ export default function AIAnalysisCard({ analysis }: { analysis: AIDiagnosis }) 
         </div>
 
         {/* Opinion Starter */}
-        <div className="flex gap-3 items-start bg-blue-50/60 dark:bg-blue-950/20 border border-blue-100/50 dark:border-blue-900/20 p-3 rounded-xl">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#2563EB] to-[#38BDF8] flex items-center justify-center shadow-sm shrink-0">
-            <MessageSquareQuote size={13} className="text-white" />
+        {analysis.opinion_starter && (
+          <div className="flex gap-3 items-start bg-blue-50/60 dark:bg-blue-950/20 border border-blue-100/50 dark:border-blue-900/20 p-3 rounded-xl">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#2563EB] to-[#38BDF8] flex items-center justify-center shadow-sm shrink-0">
+              <MessageSquareQuote size={13} className="text-white" />
+            </div>
+            <div>
+              <p className="text-[9px] font-bold text-[#64748B] dark:text-slate-500 uppercase tracking-widest mb-1">Use this in your comment</p>
+              <p className="text-xs italic text-[#334155] dark:text-slate-300 leading-relaxed">
+                {analysis.opinion_starter}
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-[9px] font-bold text-[#64748B] dark:text-slate-500 uppercase tracking-widest mb-1">Expert Opinion Starter</p>
-            <p className="text-xs italic text-[#334155] dark:text-slate-300 leading-relaxed">
-              {analysis.opinion_starter}
-            </p>
-          </div>
-        </div>
+        )}
 
         {/* AI badge */}
         <div className="flex items-center justify-end gap-1.5 text-[10px] font-bold text-[#94A3B8] dark:text-slate-600">
-          <BotMessageSquare size={12} /> AI Generated · Groq
+          <BotMessageSquare size={12} /> AI Verified · Groq LLaMA
         </div>
       </div>
     </motion.div>

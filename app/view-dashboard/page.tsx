@@ -10,12 +10,8 @@ import type { WardPerformance } from "@/types/dashboard";
 import { 
   MessageSquare, 
   Activity, 
-  HardHat, 
-  Users, 
-  Clock, 
-  MapPin, 
   TrendingUp 
-} from "lucide-react"; // IMPORT ALL USED ICONS
+} from "lucide-react";
 
 async function getDashboardData() {
   const [performance, types, summary, issues, reports, mapProjects] = await Promise.all([

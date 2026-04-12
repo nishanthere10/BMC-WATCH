@@ -30,9 +30,11 @@ export async function getProjects(filters: ProjectFilters = {}): Promise<Paginat
 
   // Apply filters
   if (search) {
-    // Sanitize commas to prevent breaking Supabase .or() parsing
-    const safeSearch = search.replace(/,/g, ' ');
-    query = query.or(`title.ilike.%${safeSearch}%,location.ilike.%${safeSearch}%,ward.ilike.%${safeSearch}%`);
+    // Sanitize special chars to prevent breaking Supabase .or() parsing and filter injection
+    const safeSearch = search.replace(/[,%\.()]/g, ' ').trim();
+    if (safeSearch) {
+      query = query.or(`title.ilike.%${safeSearch}%,location.ilike.%${safeSearch}%,ward.ilike.%${safeSearch}%`);
+    }
   }
   if (type && type !== "all") {
     query = query.ilike("type", `%${type}%`);

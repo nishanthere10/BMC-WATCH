@@ -15,7 +15,6 @@ export default function ScanPage() {
   const [status, setStatus] = useState<"idle" | "scanning" | "success" | "error">("idle");
   const [previewId, setPreviewId] = useState<string>("");
   const [previewProject, setPreviewProject] = useState<Project | null>(null);
-  const [isLoadingProject, setIsLoadingProject] = useState(false);
 
   useEffect(() => {
     async function fetchPreview() {
@@ -23,10 +22,8 @@ export default function ScanPage() {
         setPreviewProject(null);
         return;
       }
-      setIsLoadingProject(true);
       const project = await getProjectById(previewId);
       setPreviewProject(project);
-      setIsLoadingProject(false);
     }
     fetchPreview();
   }, [previewId]);

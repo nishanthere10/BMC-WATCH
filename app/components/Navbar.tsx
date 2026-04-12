@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Map, Menu, X, Landmark, FileText, BarChart2, QrCode, ScanLine } from "lucide-react";
+import { Map, Menu, X, Landmark, BarChart2, QrCode, ScanLine } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -14,7 +14,6 @@ export default function Navbar() {
 
   const navItems = [
     { name: "Nearby Works", href: "/nearby", icon: Map },
-    { name: "Projects", href: "/projects", icon: FileText },
     { name: "Civic Audit", href: "/view-dashboard", icon: BarChart2 },
   ];
 

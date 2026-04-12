@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Project } from "@/types/project";
 import Link from "next/link";
 import { ExternalLink, Percent } from "lucide-react";
 
@@ -17,8 +16,19 @@ const DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-interface ProjectMapProps {
-  projects: Project[];
+// Minimal shape the map needs — compatible with both Project and MapProject
+interface MapItem {
+  id: string;
+  title?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  ward?: string | null;
+  status?: string | null;
+  progress_percent?: number | null;
+}
+
+export interface ProjectMapProps {
+  projects: MapItem[];
 }
 
 export default function ProjectMap({ projects }: ProjectMapProps) {

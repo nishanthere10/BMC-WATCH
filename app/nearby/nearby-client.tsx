@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { LayoutGrid, Search, Activity, Layers3, ChevronLeft, ChevronRight, Map as MapIcon } from "lucide-react";
@@ -30,12 +30,8 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
   const [wardFilter, setWardFilter] = useState("all");
   const [page, setPage] = useState(1);
 
-  // Map markers state (filtered client-side for speed)
-  const [filteredMapProjects, setFilteredMapProjects] = useState<MapProject[]>(mapProjects);
-
   // Fetch updated data when filters or page change
   useEffect(() => {
-    // Skip first render since we have initial data
     let isMounted = true;
     const fetchData = async () => {
       setIsLoading(true);
@@ -62,23 +58,20 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
         isMounted = false;
         clearTimeout(timeoutId);
       };
-    } else {
-      setData(initialData);
     }
+    // Reset to initial data when all filters are default (no setState needed — already initialized)
     
     return () => { isMounted = false; };
   }, [searchQuery, typeFilter, statusFilter, wardFilter, page, initialData]);
 
-  // Filter map projects purely on client-side (they are lightweight)
-  useEffect(() => {
-    const filtered = mapProjects.filter(p => {
+  // Filter map projects purely on client-side using useMemo (no cascading renders)
+  const filteredMapProjects = useMemo(() => {
+    return mapProjects.filter(p => {
       const matchSearch = !searchQuery || p.title?.toLowerCase().includes(searchQuery.toLowerCase());
       const matchStatus = statusFilter === "all" || p.status === statusFilter;
       const matchWard = wardFilter === "all" || p.ward === wardFilter;
-      // Note: MapProjects doesn't have `type`, so type filter only applies if you want to extend MapProject
       return matchSearch && matchStatus && matchWard;
     });
-    setFilteredMapProjects(filtered);
   }, [searchQuery, statusFilter, wardFilter, mapProjects]);
 
   return (
@@ -156,7 +149,7 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
                 transition={{ duration: 0.4 }}
                 className="rounded-2xl overflow-hidden border border-white/60 dark:border-slate-700/50 shadow-xl"
               >
-                <ProjectMap projects={filteredMapProjects as any} />
+                <ProjectMap projects={filteredMapProjects as MapProject[]} />
               </motion.div>
             </TabsContent>
 

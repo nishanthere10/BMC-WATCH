@@ -72,7 +72,7 @@ export default function RecentReportsFeed({ reports }: { reports: FeedReport[] }
                 <div className="bg-white/70 dark:bg-slate-900/50 border border-blue-100/50 dark:border-blue-900/20 p-2 rounded-lg flex gap-2 items-start">
                   <BrainCircuit size={12} className="text-[#2563EB] dark:text-[#38BDF8] shrink-0 mt-0.5" />
                   <p className="text-[10px] leading-snug text-[#64748B] dark:text-slate-400 italic">
-                    "{ai.diagnosis_summary}"
+                    &ldquo;{ai.diagnosis_summary}&rdquo;
                   </p>
                 </div>
               )}

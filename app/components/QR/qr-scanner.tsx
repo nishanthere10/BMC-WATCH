@@ -49,13 +49,13 @@ export default function QRScanner({ onScanSuccess, onScanError }: QRScannerProps
           stopScanning();
           onScanSuccess(decodedText);
         },
-        (errorMessage) => {
+        (_errorMessage) => {
           // Frequent scan failures (ignore to keep UI clean)
         }
       );
-    } catch (err: any) {
+    } catch (err: unknown) {
       setIsScanning(false);
-      const errorMessage = err?.toString() || "Camera access denied or not found.";
+      const errorMessage = err instanceof Error ? err.message : String(err) || "Camera access denied or not found.";
       setError(errorMessage);
       if (onScanError) onScanError(errorMessage);
     }

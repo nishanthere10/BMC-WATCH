@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Camera, X, Image as ImageIcon, UploadCloud } from "lucide-react";
+import { X, Image as ImageIcon, UploadCloud } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
@@ -34,8 +34,8 @@ export default function PhotoUpload({ onChange, error }: PhotoUploadProps) {
 
   return (
     <div className="space-y-2">
-      <label className="text-sm font-bold uppercase tracking-wider text-slate-700">
-        Upload Photo Evidence
+      <label className="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+        Capture Site Photo
       </label>
       
       <div className="relative">
@@ -62,8 +62,8 @@ export default function PhotoUpload({ onChange, error }: PhotoUploadProps) {
                 <UploadCloud size={24} />
               </div>
               <div>
-                <p className="font-bold text-slate-700">Tap to Take Photo</p>
-                <p className="text-xs text-slate-400">or select from gallery (Max 5MB)</p>
+                <p className="font-bold text-slate-700 dark:text-slate-200">Tap to Take Photo</p>
+                <p className="text-xs text-slate-400">Capture the road work site (Max 5MB)</p>
               </div>
             </motion.div>
           ) : (

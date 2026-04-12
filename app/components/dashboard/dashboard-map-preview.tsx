@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { MapContainer, TileLayer, CircleMarker, Tooltip } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { motion } from "framer-motion";
@@ -17,11 +17,16 @@ interface MapProject {
 }
 
 export default function DashboardMapPreview({ projects }: { projects: MapProject[] }) {
+  // Use a state driven by a ref update via a layout-safe pattern
+  // useRef tracks mount; a single forced update renders post-mount
   const [isMounted, setIsMounted] = useState(false);
+  const mountedRef = useRef(false);
 
-  // Leaflet needs the window object, so we only render after mounting
   useEffect(() => {
-    setIsMounted(true);
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      setIsMounted(true); // eslint-disable-line react-hooks/set-state-in-effect -- Required: Leaflet needs window
+    }
   }, []);
 
   if (!isMounted) return <div className="h-[300px] bg-slate-100 animate-pulse rounded-2xl" />;

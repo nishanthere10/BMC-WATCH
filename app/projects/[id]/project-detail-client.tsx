@@ -2,16 +2,16 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, AlertTriangle, TrendingUp, Maximize2, Users, Calendar, Fingerprint, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Star, TrendingUp, Maximize2, Users, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 
 import ProjectDetailsHeader from "@/app/projects/project-details-header";
 import ProjectTimeline from "@/app/projects/project-timeline";
 import ProjectMap from "@/components/map/project-map";
-import RecentReports from "@/components/project-reports/recent-reports";
-import ReportForm from "@/components/project-reports/report-form";
-import ReportSuccess from "@/components/project-reports/reports-success";
+import RecentRatings from "@/components/project-reports/recent-reports";
+import ProjectRatingForm from "@/components/project-reports/report-form";
+import RatingSuccess from "@/components/project-reports/reports-success";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,18 +24,18 @@ import {
 import type { Project } from "@/types/project";
 
 export default function ProjectDetailClient({ project }: { project: Project }) {
-  const [isReportOpen, setIsReportOpen] = useState(false);
-  const [submittedReport, setSubmittedReport] = useState<{ issue_type: string } | null>(null);
+  const [isRatingOpen, setIsRatingOpen] = useState(false);
+  const [submittedRating, setSubmittedRating] = useState<{ rating: number; points: number } | null>(null);
   const [feedKey, setFeedKey] = useState(0);
 
-  const handleSuccess = (reportData: { issue_type: string }) => {
-    setSubmittedReport(reportData);
+  const handleSuccess = (data: { rating: number; points: number }) => {
+    setSubmittedRating(data);
     setFeedKey((prev) => prev + 1);
   };
 
   const closeDialog = () => {
-    setIsReportOpen(false);
-    setTimeout(() => setSubmittedReport(null), 3000);
+    setIsRatingOpen(false);
+    setTimeout(() => setSubmittedRating(null), 3000);
   };
 
   // Convert remarks to a timeline item if updates aren't available
@@ -51,7 +51,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
             className="inline-flex items-center gap-2 text-sm font-semibold text-[#64748B] dark:text-slate-400 hover:text-[#2563EB] dark:hover:text-[#38BDF8] transition-colors mb-8 group"
           >
             <ArrowLeft size={16} className="transition-transform group-hover:-translate-x-1" />
-            Back to Nearby Works
+            Back to Map
           </Link>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -64,22 +64,22 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                 transition={{ duration: 0.4 }}
                 className="bg-white/75 dark:bg-slate-900/75 backdrop-blur-xl border border-white/60 dark:border-slate-700/50 shadow-xl rounded-3xl p-6 md:p-8 relative overflow-hidden"
               >
-                {/* Mobile Report Button */}
+                {/* Mobile Rate Button */}
                 <div className="absolute top-6 right-6 lg:hidden z-10">
-                  <Dialog open={isReportOpen} onOpenChange={setIsReportOpen}>
+                  <Dialog open={isRatingOpen} onOpenChange={setIsRatingOpen}>
                     <DialogTrigger asChild>
-                      <Button size="icon" variant="destructive" className="rounded-2xl h-12 w-12 shadow-lg">
-                        <AlertTriangle size={20} />
+                      <Button size="icon" className="rounded-2xl h-12 w-12 shadow-lg bg-gradient-to-br from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-white">
+                        <Star size={20} />
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[425px] rounded-2xl border border-white/60 dark:border-slate-700/50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl">
                       <DialogHeader>
-                        <DialogTitle>{submittedReport ? "Submission Successful" : "Report a Civic Issue"}</DialogTitle>
+                        <DialogTitle>{submittedRating ? "Rating Submitted!" : "Rate This Project"}</DialogTitle>
                       </DialogHeader>
-                      {submittedReport ? (
-                        <ReportSuccess issueType={submittedReport.issue_type} onBack={closeDialog} onViewFeed={closeDialog} />
+                      {submittedRating ? (
+                        <RatingSuccess rating={submittedRating.rating} points={submittedRating.points} onBack={closeDialog} onViewFeed={closeDialog} />
                       ) : (
-                        <ReportForm projectId={project.id} onSuccess={handleSuccess} />
+                        <ProjectRatingForm projectId={project.id} onSuccess={handleSuccess} />
                       )}
                     </DialogContent>
                   </Dialog>
@@ -167,7 +167,7 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                     <ShieldCheck className="text-blue-600 dark:text-blue-400" />
                     Approvals & Phasing
                   </h3>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* NOC Timeline */}
                     <div className="space-y-4">
@@ -206,14 +206,14 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                 </motion.section>
               )}
 
-              {/* Recent Reports */}
+              {/* Community Ratings */}
               <motion.section
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: 0.1 }}
                 className="bg-white/75 dark:bg-slate-900/75 backdrop-blur-xl border border-white/60 dark:border-slate-700/50 shadow-xl rounded-3xl p-6 md:p-8"
               >
-                <RecentReports key={feedKey} projectId={project.id} />
+                <RecentRatings key={feedKey} projectId={project.id} />
               </motion.section>
 
               {/* Official Updates */}
@@ -232,38 +232,38 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
 
             {/* Sidebar */}
             <div className="space-y-5">
-              {/* Report Issue Card */}
+              {/* Rate This Project Card */}
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.4, delay: 0.15 }}
-                className="hidden lg:block bg-red-50/60 dark:bg-red-950/20 backdrop-blur-xl border border-red-100 dark:border-red-900/30 shadow-lg rounded-3xl p-6"
+                className="hidden lg:block bg-gradient-to-br from-blue-50/60 to-amber-50/40 dark:from-blue-950/20 dark:to-amber-950/10 backdrop-blur-xl border border-blue-100/60 dark:border-blue-900/30 shadow-lg rounded-3xl p-6"
               >
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="w-9 h-9 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                    <AlertTriangle size={18} className="text-red-600 dark:text-red-400" />
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center shadow-sm">
+                    <Star size={18} className="text-white" />
                   </div>
-                  <h3 className="font-bold text-base text-red-700 dark:text-red-400">Spot an Issue?</h3>
+                  <h3 className="font-bold text-base text-[#0F172A] dark:text-white">Rate This Project</h3>
                 </div>
                 <p className="text-sm text-[#64748B] dark:text-slate-400 leading-relaxed mb-5">
-                  Is work delayed? Poor quality concrete? Blocked drains? Report it directly to improve Mumbai's infrastructure.
+                  Visited this site? Take a photo, rate the work quality, and earn civic points for your contribution.
                 </p>
-                <Dialog open={isReportOpen} onOpenChange={setIsReportOpen}>
+                <Dialog open={isRatingOpen} onOpenChange={setIsRatingOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="destructive" className="w-full font-bold h-12 rounded-xl shadow-[0_4px_15px_rgba(239,68,68,0.25)]">
-                      Submit Citizen Report
+                    <Button className="w-full font-bold h-12 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#38BDF8] hover:from-[#1d4ed8] hover:to-[#0ea5e9] text-white shadow-[0_4px_15px_rgba(37,99,235,0.25)]">
+                      <Star size={16} className="mr-2" /> Submit Site Evaluation
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[450px] rounded-2xl border border-white/60 dark:border-slate-700/50 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl">
                     <DialogHeader>
                       <DialogTitle className="text-xl font-black">
-                        {submittedReport ? "Feedback Received" : "Citizen Oversight"}
+                        {submittedRating ? "Evaluation Complete" : "Rate Project Quality"}
                       </DialogTitle>
                     </DialogHeader>
-                    {submittedReport ? (
-                      <ReportSuccess issueType={submittedReport.issue_type} onBack={closeDialog} onViewFeed={closeDialog} />
+                    {submittedRating ? (
+                      <RatingSuccess rating={submittedRating.rating} points={submittedRating.points} onBack={closeDialog} onViewFeed={closeDialog} />
                     ) : (
-                      <ReportForm projectId={project.id} onSuccess={handleSuccess} />
+                      <ProjectRatingForm projectId={project.id} onSuccess={handleSuccess} />
                     )}
                   </DialogContent>
                 </Dialog>

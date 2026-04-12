@@ -1,6 +1,5 @@
 "use client";
 
-import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import type { WardPerformance } from "@/types/dashboard";
 
@@ -25,7 +24,7 @@ export default function WardRankingTable({ data }: { data: WardPerformance[] }) 
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-50 dark:divide-slate-800/50">
-          {data.map((row, i) => {
+          {data.map((row, _i) => {
             const isCritical = row.delayed_projects > 3;
             return (
               <tr
