@@ -1,0 +1,16 @@
+{
+  "name": "BMC Civic Watch",
+  "short_name": "BMC Watch",
+  "description": "Government accountability platform tracking Brihanmumbai Municipal Corporation projects.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#00287a",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}

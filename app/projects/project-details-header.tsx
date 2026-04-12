@@ -1,44 +1,81 @@
 "use client";
 
 import { Project } from "@/types/project";
-import { Badge } from "@/components/ui/badge";
-import { Calendar, MapPin, HardHat } from "lucide-react";
+import { Calendar, MapPin, HardHat, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+const statusConfig: Record<string, { pill: string; dot: string; label: string }> = {
+  "In Progress": {
+    pill: "bg-blue-100/80 text-[#2563EB] border-blue-200/50 dark:bg-blue-900/30 dark:text-[#38BDF8] dark:border-blue-800/30",
+    dot: "bg-[#2563EB] shadow-[0_0_8px_rgba(37,99,235,0.7)]",
+    label: "In Progress",
+  },
+  "Delayed": {
+    pill: "bg-amber-100/80 text-amber-700 border-amber-200/50 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800/30",
+    dot: "bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.7)]",
+    label: "Delayed",
+  },
+  "Completed": {
+    pill: "bg-emerald-100/80 text-emerald-700 border-emerald-200/50 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800/30",
+    dot: "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]",
+    label: "Completed",
+  },
+  "Planned": {
+    pill: "bg-slate-100/80 text-slate-600 border-slate-200/50 dark:bg-slate-800/50 dark:text-slate-300 dark:border-slate-700/30",
+    dot: "bg-slate-400",
+    label: "Planned",
+  },
+};
+
 export default function ProjectDetailsHeader({ project }: { project: Project }) {
-  const statusColors = {
-    "In Progress": "bg-blue-500",
-    "Delayed": "bg-amber-500",
-    "Completed": "bg-emerald-500",
-    "Planned": "bg-slate-500",
-  };
+  const config = statusConfig[project.status] ?? statusConfig["Planned"];
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-3">
-        <Badge variant="outline" className="text-primary border-primary">
-          {project.type}
-        </Badge>
-        <div className="flex items-center gap-1.5">
-          <div className={cn("w-2 h-2 rounded-full", statusColors[project.status])} />
-          <span className="text-sm font-bold uppercase tracking-wider">{project.status}</span>
-        </div>
+    <div className="space-y-5">
+      {/* Badges row */}
+      <div className="flex flex-wrap items-center gap-2.5">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border bg-slate-100/80 dark:bg-slate-800/50 text-[#64748B] dark:text-slate-300 border-slate-200/50 dark:border-slate-700/30 backdrop-blur-sm">
+          <Tag size={11} /> {project.type}
+        </span>
+        <span className={cn(
+          "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border backdrop-blur-sm",
+          config.pill
+        )}>
+          <span className={cn("w-1.5 h-1.5 rounded-full animate-pulse", config.dot)} />
+          {config.label}
+        </span>
       </div>
-      
-      <h1 className="text-3xl md:text-4xl font-black tracking-tight">{project.title}</h1>
-      
-      <div className="flex flex-wrap gap-6 text-muted-foreground">
+
+      {/* Title */}
+      <h1 className="text-3xl md:text-4xl font-black tracking-tight text-[#0F172A] dark:text-white leading-tight">
+        {project.title}
+      </h1>
+
+      {/* Meta info row */}
+      <div className="flex flex-wrap gap-x-6 gap-y-2.5">
         <div className="flex items-center gap-2">
-          <MapPin size={18} className="text-primary" />
-          <span className="text-sm font-medium">{project.location} (Ward {project.ward})</span>
+          <div className="w-7 h-7 rounded-lg bg-blue-100/80 dark:bg-blue-900/30 flex items-center justify-center">
+            <MapPin size={14} className="text-[#2563EB] dark:text-[#38BDF8]" />
+          </div>
+          <span className="text-sm font-semibold text-[#334155] dark:text-slate-300">
+            {project.location} · Ward {project.ward}
+          </span>
         </div>
         <div className="flex items-center gap-2">
-          <Calendar size={18} className="text-primary" />
-          <span className="text-sm font-medium">Started: {project.startDate}</span>
+          <div className="w-7 h-7 rounded-lg bg-blue-100/80 dark:bg-blue-900/30 flex items-center justify-center">
+            <Calendar size={14} className="text-[#2563EB] dark:text-[#38BDF8]" />
+          </div>
+          <span className="text-sm font-semibold text-[#334155] dark:text-slate-300">
+            Started {project.startDate}
+          </span>
         </div>
         <div className="flex items-center gap-2">
-          <HardHat size={18} className="text-primary" />
-          <span className="text-sm font-medium">{project.contractorName}</span>
+          <div className="w-7 h-7 rounded-lg bg-blue-100/80 dark:bg-blue-900/30 flex items-center justify-center">
+            <HardHat size={14} className="text-[#2563EB] dark:text-[#38BDF8]" />
+          </div>
+          <span className="text-sm font-semibold text-[#334155] dark:text-slate-300">
+            {project.contractorName}
+          </span>
         </div>
       </div>
     </div>

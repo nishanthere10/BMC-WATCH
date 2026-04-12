@@ -1,25 +1,35 @@
 import { ProjectUpdate } from "@/types/project";
 import { CheckCircle2, Circle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function ProjectTimeline({ updates }: { updates: ProjectUpdate[] }) {
   if (updates.length === 0) {
     return (
-      <div className="p-8 text-center border-2 border-dashed rounded-xl">
-        <p className="text-muted-foreground text-sm">No official updates posted yet.</p>
+      <div className="p-8 text-center rounded-2xl border border-dashed border-slate-200 dark:border-slate-700/50 bg-slate-50/30 dark:bg-slate-800/20">
+        <p className="text-[#64748B] dark:text-slate-500 text-sm font-medium">No official updates posted yet.</p>
       </div>
     );
   }
 
   return (
-    <div className="relative space-y-8 before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-primary before:via-slate-300 before:to-transparent">
+    <div className="relative space-y-8 before:absolute before:inset-0 before:ml-5 before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-[#2563EB] before:via-slate-200 before:to-transparent dark:before:via-slate-700">
       {updates.map((update, index) => (
-        <div key={index} className="relative flex items-start gap-6">
-          <div className="absolute left-0 flex h-10 w-10 items-center justify-center rounded-full bg-white border-2 border-primary shadow-sm">
-            {index === 0 ? <CheckCircle2 className="text-primary" size={20} /> : <Circle className="text-slate-400" size={12} />}
+        <div key={index} className="relative flex items-start gap-6 group">
+          <div className={cn(
+            "absolute left-0 flex h-10 w-10 items-center justify-center rounded-full border-2 shadow-sm transition-all duration-300",
+            index === 0
+              ? "bg-[#2563EB] border-[#2563EB] shadow-[0_0_12px_rgba(37,99,235,0.4)]"
+              : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 group-hover:border-[#2563EB]/50"
+          )}>
+            {index === 0
+              ? <CheckCircle2 className="text-white" size={18} />
+              : <Circle className="text-slate-300 dark:text-slate-600" size={10} />
+            }
           </div>
-          <div className="ml-12 pt-1">
-            <time className="text-xs font-bold uppercase tracking-widest text-primary">{update.date}</time>
-            <p className="mt-1 text-slate-700 font-medium leading-relaxed">{update.text}</p>
+
+          <div className="ml-14 pt-1.5 pb-2 flex-1">
+            <time className="text-[10px] font-bold uppercase tracking-widest text-[#2563EB] dark:text-[#38BDF8]">{update.date}</time>
+            <p className="mt-1.5 text-[#334155] dark:text-slate-300 font-medium leading-relaxed text-sm">{update.text}</p>
           </div>
         </div>
       ))}
