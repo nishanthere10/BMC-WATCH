@@ -24,7 +24,7 @@ export default function WardRankingTable({ data }: { data: WardPerformance[] }) 
           </tr>
         </thead>
         <tbody className="divide-y divide-slate-50 dark:divide-slate-800/50">
-          {data.map((row, _i) => {
+          {data.map((row) => {
             const isCritical = row.delayed_projects > 3;
             return (
               <tr
@@ -54,16 +54,14 @@ export default function WardRankingTable({ data }: { data: WardPerformance[] }) 
                   </div>
                 </td>
                 <td className="px-4 py-3.5">
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-xl text-xs font-bold bg-slate-100/80 dark:bg-slate-800/60 text-[#64748B] dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/30">
+                  <span className="cr-badge cr-badge-pending">
                     {row.citizen_reports}
                   </span>
                 </td>
                 <td className="px-4 py-3.5">
                   <span className={cn(
-                    "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-[10px] font-bold border",
-                    isCritical
-                      ? "bg-red-100/80 text-red-700 border-red-200/50 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/30"
-                      : "bg-emerald-100/80 text-emerald-700 border-emerald-200/50 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800/30"
+                    "cr-badge",
+                    isCritical ? "cr-badge-rejected" : "cr-badge-resolved"
                   )}>
                     <span className={cn("w-1 h-1 rounded-full", isCritical ? "bg-red-500" : "bg-emerald-500")} />
                     {isCritical ? "Critical" : "Stable"}

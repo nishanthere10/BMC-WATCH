@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Star, TrendingUp, Maximize2, Users, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Star, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 
@@ -12,6 +12,9 @@ import ProjectMap from "@/components/map/project-map";
 import RecentRatings from "@/components/project-reports/recent-reports";
 import ProjectRatingForm from "@/components/project-reports/report-form";
 import RatingSuccess from "@/components/project-reports/reports-success";
+import ProjectQR from "@/components/projects/project-qr";
+import ProjectFullDetails from "@/components/project-full-details";
+import ProjectInsights from "@/components/project-insights";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -110,48 +113,9 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                   </div>
                 </div>
 
-                {/* Additional Extended Information Grid */}
-                <div className="mt-8 pt-8 border-t border-slate-100 dark:border-slate-800 grid grid-cols-1 md:grid-cols-2 gap-6 relative z-0">
-                  {/* Site Dimensions */}
-                  {(project.length_meters || project.width_meters || project.area_sqm) && (
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Maximize2 size={16} className="text-slate-400" />
-                        <h4 className="text-xs font-bold uppercase tracking-widest text-[#64748B] dark:text-slate-400">Site Dimensions</h4>
-                      </div>
-                      <dl className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm text-[#0F172A] dark:text-slate-200">
-                        {project.length_meters && <><dt className="text-slate-500">Length</dt><dd className="font-semibold">{project.length_meters}m</dd></>}
-                        {project.width_meters && <><dt className="text-slate-500">Width</dt><dd className="font-semibold">{project.width_meters}m</dd></>}
-                        {project.area_sqm && <><dt className="text-slate-500">Total Area</dt><dd className="font-semibold">{project.area_sqm} sqm</dd></>}
-                      </dl>
-                    </div>
-                  )}
-
-                  {/* Personnel Contacts */}
-                  {(project.contractor_rep || project.qma_rep) && (
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Users size={16} className="text-slate-400" />
-                        <h4 className="text-xs font-bold uppercase tracking-widest text-[#64748B] dark:text-slate-400">Key Personnel</h4>
-                      </div>
-                      <div className="space-y-4">
-                        {project.contractor_rep && (
-                          <div>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Contractor Representative</p>
-                            <p className="text-sm font-semibold mt-0.5 text-[#0F172A] dark:text-slate-200">{project.contractor_rep}</p>
-                            {project.contractor_rep_mobile && <a href={`tel:${project.contractor_rep_mobile}`} className="text-xs text-blue-600 hover:underline">{project.contractor_rep_mobile}</a>}
-                          </div>
-                        )}
-                        {project.qma_rep && (
-                          <div>
-                            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">QMA Representative</p>
-                            <p className="text-sm font-semibold mt-0.5 text-[#0F172A] dark:text-slate-200">{project.qma_rep}</p>
-                            {project.qma_rep_mobile && <a href={`tel:${project.qma_rep_mobile}`} className="text-xs text-blue-600 hover:underline">{project.qma_rep_mobile}</a>}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
+                {/* Full Project Details (Expandable) */}
+                <div className="mt-6 pt-6 border-t border-slate-100 dark:border-slate-800 relative z-0">
+                  <ProjectFullDetails project={project} />
                 </div>
               </motion.section>
 
@@ -267,6 +231,24 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                     )}
                   </DialogContent>
                 </Dialog>
+              </motion.div>
+
+              {/* AI Insights */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.18 }}
+              >
+                <ProjectInsights project={project} />
+              </motion.div>
+
+              {/* Dynamic QR Code */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.20 }}
+              >
+                <ProjectQR projectId={project.id} />
               </motion.div>
 
               {/* Map Preview */}

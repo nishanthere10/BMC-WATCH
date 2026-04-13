@@ -21,19 +21,19 @@ export interface AIVerdict {
 
 const severityConfig = {
   Low: {
-    pill: "bg-emerald-100/80 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-200/50 dark:border-emerald-800/30",
+    pill: "cr-badge-resolved",
     dot: "bg-emerald-500",
     glow: "",
   },
   Medium: {
-    pill: "bg-amber-100/80 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border-amber-200/50 dark:border-amber-800/30",
+    pill: "cr-badge-pending",
     dot: "bg-amber-500",
     glow: "",
   },
   High: {
-    pill: "bg-red-100/80 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200/50 dark:border-red-800/30 animate-pulse",
+    pill: "cr-badge-rejected animate-pulse",
     dot: "bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.7)]",
-    glow: "shadow-[0_0_20px_rgba(239,68,68,0.08)]",
+    glow: "ring-1 ring-red-400/30",
   },
 };
 
@@ -44,7 +44,7 @@ export default function AIAnalysisCard({ analysis }: { analysis: AIVerdict }) {
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl bg-red-50/80 dark:bg-red-950/30 border border-red-200/60 dark:border-red-800/40 shadow-lg overflow-hidden"
+        className="cr-error-box overflow-hidden"
       >
         <div className="flex items-center gap-3 px-5 py-4">
           <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-900/40 flex items-center justify-center">
@@ -73,7 +73,7 @@ export default function AIAnalysisCard({ analysis }: { analysis: AIVerdict }) {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className={`rounded-2xl bg-white/75 dark:bg-slate-900/75 backdrop-blur-xl border border-white/60 dark:border-slate-700/50 shadow-xl overflow-hidden ${sev.glow}`}
+      className={`cr-card ${sev.glow}`}
     >
       {/* Top Bar — Verified */}
       <div className="flex items-center justify-between px-5 py-3 border-b border-slate-100 dark:border-slate-800/60 bg-gradient-to-r from-emerald-50/80 to-transparent dark:from-emerald-950/20 dark:to-transparent">
@@ -81,15 +81,15 @@ export default function AIAnalysisCard({ analysis }: { analysis: AIVerdict }) {
           <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-sm">
             <ShieldCheck size={13} className="text-white" />
           </div>
-          <span className="text-xs font-bold uppercase tracking-widest">Verified Site Photo</span>
+          <span className="text-xs font-bold font-mono uppercase tracking-widest">Verified Site Photo</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold border ${sev.pill}`}>
+          <span className={`cr-badge ${sev.pill}`}>
             <span className={`w-1.5 h-1.5 rounded-full ${sev.dot}`} />
-            {analysis.severity_level} Severity
+            <span className="font-mono">{analysis.severity_level} Severity</span>
           </span>
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-100/80 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200/50 dark:border-amber-800/30">
-            <Sparkles size={10} /> +{analysis.points_to_award} pts
+          <span className="cr-badge cr-badge-pending">
+            <Sparkles size={10} /> <span className="font-mono">+{analysis.points_to_award}</span> pts
           </span>
         </div>
       </div>
@@ -182,7 +182,7 @@ function CheckpointSection({
   if (!items || items.length === 0) return null;
   return (
     <div className="space-y-1.5">
-      <h4 className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest ${labelColor}`}>
+      <h4 className={`flex items-center gap-1.5 text-[10px] font-black font-heading uppercase tracking-widest ${labelColor}`}>
         {icon} {label}
       </h4>
       <ul className="pl-4 space-y-1">

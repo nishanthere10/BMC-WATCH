@@ -16,6 +16,21 @@ interface MapProject {
   ward: string;
 }
 
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case "Completed":
+      return "#10B981"; // emerald-500
+    case "Delayed":
+    case "Stopped":
+    case "Deleted":
+    case "Cancelled":
+      return "#ef4444"; // red-500
+    case "In Progress":
+    default:
+      return "#facc15"; // yellow-400
+  }
+};
+
 export default function DashboardMapPreview({ projects }: { projects: MapProject[] }) {
   // Use a state driven by a ref update via a layout-safe pattern
   // useRef tracks mount; a single forced update renders post-mount
@@ -73,9 +88,9 @@ export default function DashboardMapPreview({ projects }: { projects: MapProject
             <CircleMarker
               key={project.id}
               center={[project.latitude, project.longitude]}
-              radius={project.status === "Delayed" ? 8 : 6}
+              radius={project.status === "Completed" ? 6 : 8}
               pathOptions={{
-                fillColor: project.status === "Delayed" ? "#ef4444" : "#10b981",
+                fillColor: getStatusColor(project.status),
                 color: "white",
                 weight: 2,
                 opacity: 1,
@@ -86,7 +101,7 @@ export default function DashboardMapPreview({ projects }: { projects: MapProject
                 <div className="p-1 space-y-1">
                   <p className="text-[10px] font-black uppercase text-slate-400">{project.ward}</p>
                   <p className="text-xs font-bold text-slate-800">{project.title}</p>
-                  <Badge variant={project.status === "Delayed" ? "destructive" : "default"} className="text-[9px] px-1 py-0">
+                  <Badge variant={project.status === "Completed" ? "default" : project.status === "In Progress" ? "warning" : "destructive"} className="text-[9px] px-1 py-0">
                     {project.status}
                   </Badge>
                 </div>
@@ -98,12 +113,16 @@ export default function DashboardMapPreview({ projects }: { projects: MapProject
         {/* Map Legend */}
         <div className="absolute bottom-4 left-4 z-[1000] bg-white/80 dark:bg-slate-900/80 backdrop-blur-md p-3 rounded-2xl border border-white/60 dark:border-slate-700/50 shadow-sm space-y-2">
           <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-red-500 shadow-[0_0_4px_rgba(239,68,68,0.7)]" />
-            <span className="text-[9px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Critical Delay</span>
+            <div className="h-2 w-2 rounded-full bg-[#10B981] shadow-[0_0_4px_rgba(16,185,129,0.7)]" />
+            <span className="text-[9px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Completed</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_4px_rgba(16,185,129,0.7)]" />
-            <span className="text-[9px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">On Track</span>
+            <div className="h-2 w-2 rounded-full bg-[#facc15] shadow-[0_0_4px_rgba(250,204,21,0.7)]" />
+            <span className="text-[9px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">In Progress</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-red-500 shadow-[0_0_4px_rgba(239,68,68,0.7)]" />
+            <span className="text-[9px] font-bold text-[#64748B] dark:text-slate-400 uppercase tracking-wider">Deleted / Stopped</span>
           </div>
         </div>
       </div>
@@ -113,6 +132,7 @@ export default function DashboardMapPreview({ projects }: { projects: MapProject
 
 // Helper Badge component if you don't want to import the whole shadcn one here
 function Badge({ children, variant, className }: { children: React.ReactNode; variant?: string; className?: string }) {
-    const styles = variant === 'destructive' ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700';
+    const styles = variant === 'destructive' ? 'bg-red-100 text-red-700' : 
+                   variant === 'warning' ? 'bg-yellow-100 text-yellow-700' : 'bg-emerald-100 text-emerald-700';
     return <span className={`px-2 py-0.5 rounded-full font-bold ${styles} ${className}`}>{children}</span>;
 }

@@ -17,7 +17,7 @@ export default function DashboardFilters() {
         <input 
           type="text" 
           placeholder="Search projects by name or work code..." 
-          className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white/50 border border-white/60 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all text-sm font-medium"
+          className="cr-input w-full pl-10"
         />
       </div>
       

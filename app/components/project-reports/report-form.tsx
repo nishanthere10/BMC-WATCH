@@ -3,8 +3,11 @@
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Star } from "lucide-react";
+import { Loader2, Star, UserCircle } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
+import Link from "next/link";
+
+import { useAuth } from "@/app/hooks/use-auth";
 
 import { ratingSchema, RatingFormValues } from "@/lib/report-schema";
 import { uploadReportImage } from "@/lib/upload-report-image";
@@ -27,6 +30,7 @@ interface RatingFormProps {
 
 export default function ProjectRatingForm({ projectId, onSuccess }: RatingFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user, loading: authLoading } = useAuth();
 
   // AI Analysis States
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -125,6 +129,22 @@ export default function ProjectRatingForm({ projectId, onSuccess }: RatingFormPr
         });
       }
 
+      // Fire and forget blockchain logging
+      fetch("/api/log-onchain", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          reportId: _rating.id,
+          payload: {
+            reportId: _rating.id,
+            projectId,
+            rating: data.rating,
+            comment: data.comment,
+            aiReasoning: aiAnalysis?.diagnosis_summary || ""
+          }
+        })
+      }).catch(err => console.error("Blockchain execution failed silently", err));
+
       onSuccess({ rating: data.rating, points: pointsAwarded });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : "";
@@ -140,6 +160,27 @@ export default function ProjectRatingForm({ projectId, onSuccess }: RatingFormPr
   };
 
   const isSpam = aiAnalysis && !aiAnalysis.is_genuine;
+
+  if (authLoading) {
+    return <div className="h-64 flex items-center justify-center"><Loader2 className="animate-spin text-blue-500" /></div>;
+  }
+
+  if (!user) {
+    return (
+      <div className="flex flex-col items-center justify-center py-10 text-center space-y-4">
+        <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-slate-800 flex items-center justify-center border border-blue-100 dark:border-slate-700 shadow-sm">
+          <UserCircle size={32} className="text-[#2563EB] dark:text-[#38BDF8]" />
+        </div>
+        <div>
+          <h3 className="font-bold font-heading text-lg text-slate-900 dark:text-white">Login to Rate Projects</h3>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-xs mx-auto">Help the community by evaluating site progress and earn civic points.</p>
+        </div>
+        <Link href="/login" className="cr-btn-primary mt-2 px-8 py-3.5">
+          Login via Mobile
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -182,7 +223,7 @@ export default function ProjectRatingForm({ projectId, onSuccess }: RatingFormPr
 
       {/* Comment */}
       <div className="space-y-2">
-        <label className="text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+        <label className="cr-label">
           Your Assessment
         </label>
         <Textarea
@@ -195,10 +236,10 @@ export default function ProjectRatingForm({ projectId, onSuccess }: RatingFormPr
       {/* Submit Button */}
       <Button
         type="submit"
-        className={`w-full h-14 text-lg font-bold gap-2 transition-all ${
+        className={`w-full h-14 text-lg font-bold gap-2 transition-all cr-btn ${
           isSpam
-            ? "bg-slate-300 dark:bg-slate-700 cursor-not-allowed"
-            : "bg-gradient-to-r from-[#2563EB] to-[#38BDF8] hover:from-[#1d4ed8] hover:to-[#0ea5e9] text-white shadow-[0_4px_15px_rgba(37,99,235,0.3)]"
+            ? "bg-slate-300 dark:bg-slate-700 cursor-not-allowed text-slate-500"
+            : "cr-btn-primary"
         }`}
         disabled={isSubmitting || isAnalyzing || !!isSpam}
       >

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Star, MessageSquare, Clock, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -13,6 +14,8 @@ interface CommunityRating {
   photo_url: string;
   is_genuine: boolean;
   points_awarded: number;
+  blockchain_verified?: boolean;
+  blockchain_tx_hash?: string;
   created_at: string;
 }
 
@@ -80,18 +83,32 @@ export default function RecentRatings({ projectId }: { projectId: string }) {
             className="flex gap-4 p-4 rounded-2xl bg-slate-50/60 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-700/40 hover:bg-white/70 dark:hover:bg-slate-800/60 hover:border-blue-200/40 dark:hover:border-blue-800/20 hover:shadow-sm transition-all duration-200"
           >
             {/* Photo */}
-            <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 border border-white/60 dark:border-slate-700/50 shadow-sm">
-              <img src={r.photo_url} alt="Site photo" className="w-full h-full object-cover" />
+            <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 border border-white/60 dark:border-slate-700/50 shadow-sm">
+              <Image src={r.photo_url} alt="Site photo" fill className="object-cover" unoptimized />
             </div>
 
             <div className="flex-1 space-y-1.5 min-w-0">
               <div className="flex items-center justify-between gap-2">
-                {/* Verified badge */}
-                {r.is_genuine && (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100/80 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-800/30">
-                    <ShieldCheck size={10} /> Verified
-                  </span>
-                )}
+                {/* Verified badges */}
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {r.is_genuine && (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100/80 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-800/30">
+                      <ShieldCheck size={10} /> Verified
+                    </span>
+                  )}
+                  {r.blockchain_verified && (
+                    <a 
+                      href={`https://amoy.polygonscan.com/tx/${r.blockchain_tx_hash}`} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100/80 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border border-purple-200/50 dark:border-purple-800/30 hover:bg-purple-200/80 transition-colors cursor-pointer"
+                    >
+                      <svg width="10" height="10" viewBox="0 0 32 32" fill="currentColor">
+                        <path d="M16 2L2 9.5l14 7.5 14-7.5L16 2zM2 22.5L16 30l14-7.5v-10l-14 7.5-14-7.5v10z"/>
+                      </svg> On-Chain Proof
+                    </a>
+                  )}
+                </div>
                 {/* Stars */}
                 <div className="flex gap-0.5 shrink-0">
                   {[...Array(5)].map((_, idx) => (

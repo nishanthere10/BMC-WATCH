@@ -46,39 +46,42 @@ async function getDashboardData() {
 export default async function DashboardPage() {
   const data = await getDashboardData();
 
-  const glassPanel = "bg-white/75 dark:bg-slate-900/75 backdrop-blur-xl border border-white/60 dark:border-slate-700/50 shadow-xl rounded-3xl";
-  const sectionTitle = "text-lg font-bold text-[#0F172A] dark:text-white";
-  const sectionSub = "text-xs text-[#64748B] dark:text-slate-400 font-medium";
+  const glassPanel = "cr-card";
+  const sectionTitle = "font-heading text-lg font-bold" ;
+  const sectionSub = "text-[11px] font-mono uppercase tracking-widest text-slate-400 dark:text-slate-500";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F4F7FB] via-blue-50 to-[#F4F7FB] dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-300">
+    <div className="min-h-screen transition-colors duration-300">
       <main className="pb-20 pt-24">
         <div className="container px-4 md:px-8 space-y-8">
 
           {/* Page Header */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100/80 dark:bg-blue-900/30 border border-blue-200/50 dark:border-blue-800/30 text-[#2563EB] dark:text-[#38BDF8] text-xs font-bold uppercase tracking-widest backdrop-blur-sm">
-                <Activity size={12} /> Live Intelligence Feed
-              </div>
-              <h1 className="text-4xl font-extrabold tracking-tight text-[#0F172A] dark:text-white">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b-2 border-slate-200 dark:border-slate-800">
+            <div className="space-y-3">
+              <span className="cr-section-title">Live Intelligence Feed</span>
+              <h1
+                className="font-heading font-extrabold text-slate-900 dark:text-white"
+                style={{ fontSize: "clamp(2rem, 4vw, 2.8rem)", letterSpacing: "-0.04em", lineHeight: 1.05 }}
+              >
                 Mumbai Civic Audit
               </h1>
-              <p className="text-[#64748B] dark:text-slate-400 font-medium text-sm">
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
                 Real-time oversight of{" "}
-                <span className="font-bold text-[#0F172A] dark:text-white">
+                <span className="font-mono font-bold text-slate-900 dark:text-white">
                   {data.totalBudget > 0 ? `₹${(data.totalBudget / 10000000).toFixed(2)} Cr` : "---"}
                 </span>{" "}
                 in public infrastructure works.
               </p>
             </div>
             
-            <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/60 dark:border-slate-700/50 shadow-sm">
-              <span className="flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-              </span>
-              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Live Feed</span>
+            <div className="flex items-center gap-3">
+              <div className="cr-card-flat px-4 py-2.5 flex items-center gap-2">
+                <span className="flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                </span>
+                <span className="font-mono text-[11px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">Live Feed</span>
+              </div>
             </div>
           </div>
 

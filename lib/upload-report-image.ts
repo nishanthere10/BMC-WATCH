@@ -10,10 +10,11 @@ export async function uploadReportImage(file: File) {
     .upload(filePath, file);
 
   if (error) {
-    if (error.message.includes('Bucket not found') || error.name === 'StorageApiError') {
+    if (error.message.includes('Bucket not found')) {
       throw new Error("STORAGE_MISSING: The 'report-photos' bucket handles image uploads but is missing in your Supabase project. Please create a public storage bucket named 'report-photos'.");
     }
-    throw error;
+    console.error("Storage Error:", error);
+    throw new Error(`Failed to upload photo: ${error.message}`);
   }
 
   // Get public URL

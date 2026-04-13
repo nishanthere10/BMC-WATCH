@@ -34,7 +34,7 @@ export default function RatingSuccess({ rating, points, onBack, onViewFeed }: Ra
         transition={{ delay: 0.3 }}
         className="space-y-3"
       >
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100/80 dark:bg-emerald-900/30 border border-emerald-200/40 dark:border-emerald-800/30 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold uppercase tracking-widest mb-2">
+        <div className="cr-badge cr-badge-resolved mb-2">
           <Sparkles size={11} /> AI Verified
         </div>
         <h2 className="text-2xl font-black tracking-tight text-[#0F172A] dark:text-white">Rating Submitted!</h2>
@@ -88,7 +88,7 @@ export default function RatingSuccess({ rating, points, onBack, onViewFeed }: Ra
       >
         <Button
           onClick={onViewFeed}
-          className="h-12 font-bold gap-2 bg-[#0F172A] dark:bg-white text-white dark:text-[#0F172A] hover:bg-[#2563EB] dark:hover:bg-[#38BDF8] dark:hover:text-white rounded-xl shadow-sm transition-all"
+          className="cr-btn-primary w-full h-12 gap-2"
         >
           <LayoutList size={16} /> View Community Ratings
         </Button>

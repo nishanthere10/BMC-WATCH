@@ -13,10 +13,10 @@ interface FeedReport {
 }
 
 const issueColors: Record<string, string> = {
-  "Safety Hazard": "bg-red-100/80 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-red-200/50 dark:border-red-800/30",
-  "Construction Quality": "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border-amber-200/50 dark:border-amber-800/30",
-  "Debris / Waste": "bg-orange-100/80 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 border-orange-200/50 dark:border-orange-800/30",
-  "Work Stalled": "bg-slate-100/80 text-slate-600 dark:bg-slate-800/50 dark:text-slate-300 border-slate-200/50 dark:border-slate-700/30",
+  "Safety Hazard": "cr-badge-rejected",
+  "Construction Quality": "cr-badge-pending",
+  "Debris / Waste": "cr-badge-pending",
+  "Work Stalled": "cr-badge-pending",
 };
 
 export default function RecentReportsFeed({ reports }: { reports: FeedReport[] }) {
@@ -50,7 +50,7 @@ export default function RecentReportsFeed({ reports }: { reports: FeedReport[] }
 
             <div className="flex-1 min-w-0 space-y-1.5">
               <div className="flex items-start justify-between gap-2">
-                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border ${pillStyle}`}>
+                <span className={`cr-badge ${pillStyle}`}>
                   {report.issue_type}
                 </span>
                 <span className="text-[10px] font-semibold text-[#94A3B8] dark:text-slate-500 flex items-center gap-1 shrink-0">

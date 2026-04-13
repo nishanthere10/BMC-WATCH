@@ -3,7 +3,6 @@
 import { AlertTriangle, RefreshCw } from "lucide-react";
 
 export default function DashboardError({
-  error: _error,
   reset,
 }: {
   error: Error & { digest?: string };

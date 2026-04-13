@@ -7,9 +7,10 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-base: var(--font-ibm-plex);
+  --font-sans: var(--font-ibm-plex);
+  --font-mono: var(--font-mono);
+  --font-heading: var(--font-syne);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -117,15 +118,228 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* UX4G Colors */
+:root {
+  --cr-blue-mid: #0055A4;
+  --cr-saffron: #F47920;
+  --cr-india-green: #1A7A3E;
+  --cr-danger: #B91C1C;
+  --cr-warning: #92400E;
+  
+  --bg-color: #ffffff;
+  --text-main: #1f2937; /* slate-800 */
+}
+
+.dark {
+  --cr-blue-mid: #38bdf8;
+  --cr-saffron: #fb923c;
+  --cr-india-green: #4ade80;
+  --cr-danger: #f87171;
+  --cr-warning: #fbbf24;
+
+  --bg-color: #0A0F1E;
+  --text-main: #f8fafc;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--bg-color);
+    color: var(--text-main);
   }
-  html {
-    @apply font-sans;
+
+  /* Custom scrollbars */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 rounded-full;
+  }
+  .dark ::-webkit-scrollbar-thumb {
+    @apply bg-[#141929];
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-400;
+  }
+  .dark ::-webkit-scrollbar-thumb:hover {
+    @apply bg-slate-700;
+  }
+}
+
+@layer components {
+  /* ═══════════════════════════════════════════════════════
+     HYPER-STRUCTURAL CIVIC TERMINAL — Design System v3
+     Aesthetic: Industrial | Brutalist | Data-Dense | Bold
+  ═══════════════════════════════════════════════════════ */
+
+  /* ── Page Layout ── */
+  .cr-page-header {
+    @apply mb-8 text-center space-y-3;
+  }
+  .cr-page-title {
+    @apply text-4xl md:text-5xl font-heading font-extrabold tracking-tight text-slate-900 dark:text-white;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+  }
+  .cr-page-subtitle {
+    @apply text-base font-sans font-medium text-slate-500 dark:text-slate-400 max-w-2xl mx-auto;
+    letter-spacing: 0.01em;
+  }
+  .cr-section-title {
+    @apply text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500;
+  }
+
+  /* ── Cards ── */
+  .cr-card {
+    @apply bg-white dark:bg-[#0D1424] border-2 border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden
+           transition-all duration-200
+           hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,85,164,0.15)] dark:hover:shadow-[6px_6px_0px_0px_rgba(56,189,248,0.1)];
+  }
+  .cr-card-flat {
+    @apply bg-white dark:bg-[#0D1424] border-2 border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden;
+  }
+  .cr-glass {
+    @apply bg-white/80 dark:bg-[#0D1424]/80 backdrop-blur-xl
+           border-2 border-slate-200/80 dark:border-slate-700/60
+           rounded-2xl overflow-hidden;
+  }
+  /* Navbar uses this — keep structural not blurry */
+  .cr-glass-subtle {
+    @apply bg-white dark:bg-[#070D1A]
+           border-b-2 border-slate-200 dark:border-slate-800
+           shadow-[0_2px_0_0_rgba(0,85,164,0.06)] dark:shadow-[0_2px_0_0_rgba(56,189,248,0.04)]
+           overflow-hidden transition-colors duration-300;
+  }
+
+  /* ── Buttons ── */
+  .cr-btn {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold
+           rounded-xl border-2 border-transparent
+           transition-all duration-150 disabled:opacity-40 disabled:pointer-events-none;
+  }
+  .cr-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold
+           rounded-xl border-2 border-transparent text-white
+           disabled:opacity-40 disabled:pointer-events-none
+           transition-all duration-150
+           shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)]
+           hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)] hover:translate-y-[2px];
+    background-color: var(--cr-blue-mid);
+  }
+  .cr-btn-accent {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold
+           rounded-xl border-2 border-transparent text-white
+           disabled:opacity-40 disabled:pointer-events-none
+           transition-all duration-150
+           shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)]
+           hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)] hover:translate-y-[2px];
+    background-color: var(--cr-saffron);
+  }
+  .cr-btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold
+           rounded-xl bg-transparent
+           disabled:opacity-40 disabled:pointer-events-none
+           transition-all duration-150
+           shadow-[4px_4px_0px_0px_rgba(0,85,164,0.2)]
+           hover:shadow-[2px_2px_0px_0px_rgba(0,85,164,0.1)] hover:translate-y-[2px] hover:bg-blue-50 dark:hover:bg-[#0D1424];
+    color: var(--cr-blue-mid);
+    border: 2px solid var(--cr-blue-mid);
+  }
+  .cr-btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold
+           rounded-xl border-2 border-transparent bg-transparent
+           text-slate-500 hover:text-slate-900 dark:hover:text-white
+           hover:bg-slate-100 dark:hover:bg-slate-800/60
+           disabled:opacity-40 disabled:pointer-events-none
+           transition-all duration-150;
+  }
+  .cr-btn-danger {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 text-sm font-bold
+           rounded-xl border-2 border-transparent text-white
+           disabled:opacity-40 disabled:pointer-events-none
+           transition-all duration-150
+           shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)]
+           hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)] hover:translate-y-[2px];
+    background-color: var(--cr-danger);
+  }
+
+  .cr-card-destructive {
+    @apply bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800/50;
+  }
+
+  /* ── Status Badges ── */
+  .cr-badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-mono font-bold uppercase tracking-widest border-2;
+  }
+  .cr-badge-pending {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-mono font-bold uppercase tracking-widest
+           border-2 bg-slate-100 text-slate-600 border-slate-300
+           dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600;
+  }
+  .cr-badge-progress {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-mono font-bold uppercase tracking-widest
+           border-2 bg-blue-50 text-blue-700 border-blue-300
+           dark:bg-blue-950/50 dark:text-blue-300 dark:border-blue-700;
+  }
+  .cr-badge-resolved {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-mono font-bold uppercase tracking-widest
+           border-2 bg-emerald-50 text-emerald-700 border-emerald-300
+           dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-700;
+  }
+  .cr-badge-rejected {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[11px] font-mono font-bold uppercase tracking-widest
+           border-2 bg-red-50 text-red-700 border-red-300
+           dark:bg-red-950/50 dark:text-red-300 dark:border-red-700;
+  }
+
+  /* ── Info Boxes ── */
+  .cr-error-box {
+    @apply p-4 rounded-xl border-2 border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-400;
+  }
+  .cr-success-box {
+    @apply p-4 rounded-xl border-2 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400;
+  }
+
+  /* ── Auth ── */
+  .cr-auth-bg {
+    background-color: var(--bg-color);
+    background-image:
+      linear-gradient(rgba(0,85,164,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,85,164,0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .dark .cr-auth-bg {
+    background-image:
+      linear-gradient(rgba(56,189,248,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(56,189,248,0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .cr-auth-panel {
+    @apply bg-white dark:bg-[#0D1424] border-2 border-slate-200 dark:border-slate-700
+           rounded-2xl overflow-hidden p-8 max-w-md w-full mx-auto
+           shadow-[8px_8px_0px_0px_rgba(0,85,164,0.1)] dark:shadow-[8px_8px_0px_0px_rgba(56,189,248,0.07)];
+  }
+
+  /* ── Forms ── */
+  .cr-label {
+    @apply text-[11px] font-mono font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400;
+  }
+  .cr-input {
+    @apply w-full flex h-11 rounded-xl border-2 border-slate-200 dark:border-slate-700
+           bg-slate-50 dark:bg-slate-900/50 px-3 py-2 text-sm font-medium
+           transition-colors focus-visible:outline-none focus-visible:border-[#0055A4] dark:focus-visible:border-[#38BDF8]
+           disabled:cursor-not-allowed disabled:opacity-50 shadow-none;
+  }
+
+  /* ── Tables ── */
+  .cr-table {
+    @apply w-full text-sm text-left overflow-hidden rounded-xl border-2 border-slate-200 dark:border-slate-700;
   }
 }
 
