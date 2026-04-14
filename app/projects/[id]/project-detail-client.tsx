@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Star, TrendingUp } from "lucide-react";
+import { ArrowLeft, Star, TrendingUp, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
 

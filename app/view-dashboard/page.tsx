@@ -1,8 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import StatCard from "@/components/dashboard/stat-card";
 import WardRankingTable from "@/components/dashboard/ward-ranking-table";
-import ProjectStatusChart from "@/components/dashboard/project-status-chart";
-import IssueBreakdownChart from "@/components/dashboard/issue-breakdown-chart";
+
 import RecentReportsFeed from "@/components/dashboard/recent-reports-feed";
 import DashboardMapWrapper from "@/components/dashboard/dashboard-map-wrapper";
 import DashboardFilters from "@/components/dashboard/dashboard-filters"; // ADD THIS
@@ -127,23 +126,7 @@ export default async function DashboardPage() {
             </div>
           </div>
 
-          {/* Data Breakdown Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className={`${glassPanel} p-6`}>
-              <div className="flex items-center gap-2 mb-4">
-                <TrendingUp size={18} className="text-blue-500" />
-                <h3 className={sectionTitle}>Work by Category</h3>
-              </div>
-              <ProjectStatusChart data={data.typeStats} />
-            </div>
-            <div className={`${glassPanel} p-6`}>
-              <div className="flex items-center gap-2 mb-4">
-                <Activity size={18} className="text-blue-500" />
-                <h3 className={sectionTitle}>Citizen Issue Profile</h3>
-              </div>
-              <IssueBreakdownChart data={data.issueStats} />
-            </div>
-          </div>
+
 
           {/* Ward Leaderboard */}
           <div className={`${glassPanel} p-6 overflow-hidden`}>

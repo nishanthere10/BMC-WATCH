@@ -18,7 +18,10 @@ export default function RatingSuccess({ rating, points, onBack, onViewFeed }: Ra
       <motion.div
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1, rotate: [0, 10, -10, 0] }}
-        transition={{ type: "spring", stiffness: 260, damping: 20 }}
+        transition={{ 
+          default: { type: "spring", stiffness: 260, damping: 20 },
+          rotate: { type: "tween", duration: 0.5, ease: "easeInOut" }
+        }}
         className="relative"
       >
         <div className="absolute inset-0 rounded-full bg-emerald-400/30 blur-xl scale-150 animate-pulse" />

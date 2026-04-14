@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from "html5-qrcode";
 import { Camera, CameraOff, RefreshCw, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 interface QRScannerProps {
   onScanSuccess: (decodedText: string) => void;
@@ -18,7 +16,6 @@ export default function QRScanner({ onScanSuccess, onScanError }: QRScannerProps
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const scannerRegionId = "qr-reader-container";
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (scannerRef.current?.isScanning) {
@@ -42,15 +39,14 @@ export default function QRScanner({ onScanSuccess, onScanError }: QRScannerProps
       setIsScanning(true);
 
       await scanner.start(
-        { facingMode: "environment" }, // Prioritize back camera
+        { facingMode: "environment" },
         config,
         (decodedText) => {
-          // Success: stop scanner and return result
           stopScanning();
           onScanSuccess(decodedText);
         },
-        (_errorMessage) => {
-          // Frequent scan failures (ignore to keep UI clean)
+        () => {
+          // Frequent scan failures — ignored for clean UX
         }
       );
     } catch (err: unknown) {
@@ -74,89 +70,94 @@ export default function QRScanner({ onScanSuccess, onScanError }: QRScannerProps
 
   return (
     <div className="space-y-4 w-full max-w-md mx-auto">
+
       {/* Scanner Container */}
-      <div className="relative aspect-square overflow-hidden rounded-2xl bg-slate-950 border-4 border-slate-200 shadow-xl">
+      <div className="relative aspect-square overflow-hidden rounded-2xl bg-slate-950 border-2 border-slate-700 dark:border-slate-700">
         <div id={scannerRegionId} className="w-full h-full" />
-        
-        {/* Visual Overlay for Scanner */}
+
+        {/* Idle Overlay */}
         <AnimatePresence>
           {!isScanning && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/80 text-white p-6 text-center z-10"
+              className="absolute inset-0 flex flex-col items-center justify-center bg-[#070D1A]/90 text-white p-6 text-center z-10"
             >
-              <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-4 border border-primary/50">
-                <Camera className="text-primary" size={32} />
+              <div className="w-16 h-16 rounded-2xl border-2 border-[#0055A4]/60 bg-[#0055A4]/15 flex items-center justify-center mb-4">
+                <Camera className="text-[#38BDF8]" size={30} />
               </div>
-              <h3 className="font-bold text-lg">Ready to Scan</h3>
-              <p className="text-sm text-slate-300 mt-2">
-                Point your camera at the BMC project QR code on the site barricade.
+              <h3 className="font-heading font-bold text-lg mb-2" style={{ letterSpacing: "-0.02em" }}>
+                Ready to Scan
+              </h3>
+              <p className="text-sm text-slate-400 font-medium mb-6 max-w-[200px] leading-relaxed">
+                Point your camera at the BMC project QR code on the site board.
               </p>
-              <Button 
+              <button
                 onClick={startScanning}
-                className="mt-6 bg-primary hover:bg-primary/90 text-white font-bold px-8"
+                className="cr-btn-primary px-8 py-3 text-base shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]"
               >
+                <Camera size={16} />
                 Launch Camera
-              </Button>
+              </button>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Scanning Animation */}
+        {/* Active scanning indicator */}
         {isScanning && (
           <div className="absolute inset-0 pointer-events-none z-20">
-            <motion.div 
+            <motion.div
               initial={{ top: "10%" }}
               animate={{ top: "85%" }}
-              transition={{ repeat: Infinity, duration: 2, ease: "linear", repeatType: "reverse" }}
-              className="absolute left-1/2 -translate-x-1/2 w-4/5 h-0.5 bg-primary shadow-[0_0_15px_rgba(59,130,246,1)]"
+              transition={{ repeat: Infinity, duration: 2.5, ease: "linear", repeatType: "reverse" }}
+              className="absolute left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#38BDF8] to-transparent"
+              style={{ boxShadow: "0 0 12px 2px rgba(56,189,248,0.7)" }}
             />
-            <div className="absolute inset-0 border-[40px] border-black/40" />
           </div>
         )}
       </div>
 
-      {/* Controls & Feedback */}
+      {/* Controls */}
       <div className="flex justify-center gap-3">
         {isScanning && (
-          <Button 
-            variant="destructive" 
+          <button
             onClick={stopScanning}
-            className="flex items-center gap-2"
+            className="cr-btn-danger flex items-center gap-2"
           >
-            <CameraOff size={18} /> Stop Scanner
-          </Button>
+            <CameraOff size={16} /> Stop Scanner
+          </button>
         )}
-        
+
         {error && (
-          <Button 
-            variant="outline" 
+          <button
             onClick={startScanning}
-            className="flex items-center gap-2"
+            className="cr-btn-secondary flex items-center gap-2"
           >
-            <RefreshCw size={18} /> Retry
-          </Button>
+            <RefreshCw size={16} /> Retry
+          </button>
         )}
       </div>
 
-      {/* Error Alert */}
+      {/* Error */}
       <AnimatePresence>
         {error && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
           >
-            <Alert variant="destructive" className="bg-red-50 border-red-200 text-red-800">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Camera Error</AlertTitle>
-              <AlertDescription className="text-xs">
-                {error.includes("NotAllowedError") 
-                  ? "Camera permission was denied. Please enable camera access in your browser settings."
-                  : "Could not initialize camera. Ensure you are on HTTPS and have a camera connected."}
-              </AlertDescription>
-            </Alert>
+            <div className="cr-error-box flex items-start gap-3 text-sm">
+              <AlertCircle size={16} className="shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold mb-0.5">Camera Error</p>
+                <p className="text-xs font-medium opacity-80">
+                  {error.includes("NotAllowedError")
+                    ? "Camera permission denied. Enable camera access in your browser settings."
+                    : "Could not initialize camera. Ensure you are on HTTPS and have a camera connected."}
+                </p>
+              </div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -104,7 +104,7 @@ export async function projectExists(idOrCode: string): Promise<boolean> {
 export async function getMapProjects() {
   const { data, error } = await supabase
     .from("bmc_projects")
-    .select("id, title, latitude, longitude, status, ward")
+    .select("id, title, latitude, longitude, status, ward, progress_percent")
     .not("latitude", "is", null)
     .not("longitude", "is", null);
 

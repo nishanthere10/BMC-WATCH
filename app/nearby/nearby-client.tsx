@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
-import { motion, AnimatePresence } from "framer-motion";
 import { LayoutGrid, Search, Activity, Layers3, ChevronLeft, ChevronRight, Map as MapIcon } from "lucide-react";
 
 const ProjectMap = dynamic(() => import("@/components/map/project-map"), { ssr: false, loading: () => <div className="h-[400px] w-full bg-muted animate-pulse rounded-xl" /> });
@@ -112,11 +111,8 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
       <main className="pb-20 pt-24">
         {/* Page Header */}
         <div className="container px-4 md:px-8 mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col md:flex-row md:items-end justify-between gap-6"
+          <div
+            className="flex flex-col md:flex-row md:items-end justify-between gap-6 animate-in fade-in slide-in-from-bottom-2 duration-500"
           >
             <div className="space-y-2">
               <div className="cr-badge cr-badge-progress uppercase tracking-widest backdrop-blur-sm">
@@ -131,11 +127,8 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
             </div>
 
             {/* Quick Stats */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="flex gap-3 shrink-0"
+            <div
+              className="flex gap-3 shrink-0 animate-in fade-in zoom-in-95 duration-500 delay-100 fill-mode-both"
             >
               <div className="cr-card px-6 py-4 text-center">
                 <p className="cr-section-title mb-1">
@@ -145,8 +138,8 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
                   {userLocation && !showAll ? filteredMapProjects.length : data.total}
                 </p>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
 
         <div className="container px-4 md:px-8">
@@ -191,30 +184,25 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
             </div>
 
             <TabsContent value="map" className="mt-0">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4 }}
-                className="cr-card bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] bg-[size:12px_12px]"
+              <div
+                className="cr-card bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] bg-[size:12px_12px] animate-in fade-in zoom-in-95 duration-400"
               >
                 <ProjectMap
                   projects={filteredMapProjects as MapProject[]}
                   userLocation={userLocation ?? undefined}
                 />
-              </motion.div>
+              </div>
             </TabsContent>
 
             <TabsContent value="grid" className="mt-0">
               <div className={isLoading ? "opacity-50 pointer-events-none transition-opacity" : "transition-opacity"}>
                 {filteredGridProjects.length > 0 ? (
                   <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                      <AnimatePresence mode="popLayout">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {filteredGridProjects.map((project) => (
                           <ProjectCard key={project.id} project={project} />
                         ))}
-                      </AnimatePresence>
-                    </div>
+                      </div>
 
                     {/* Pagination Controls */}
                     {data.totalPages > 1 && (
@@ -242,10 +230,8 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
                     )}
                   </>
                 ) : (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex flex-col items-center justify-center py-24 text-center space-y-4"
+                  <div
+                    className="flex flex-col items-center justify-center py-24 text-center space-y-4 animate-in fade-in slide-in-from-top-2"
                   >
                     <div className="w-20 h-20 rounded-3xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/60 dark:border-slate-700/50 shadow-lg flex items-center justify-center">
                       <Search size={36} className="text-[#64748B] dark:text-slate-500" />
@@ -254,7 +240,7 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
                       <h3 className="text-xl font-bold text-[#0F172A] dark:text-white">No projects found</h3>
                       <p className="text-[#64748B] dark:text-slate-400 mt-1 font-medium">Try adjusting your filters, search terms, or radius.</p>
                     </div>
-                  </motion.div>
+                  </div>
                 )}
               </div>
             </TabsContent>

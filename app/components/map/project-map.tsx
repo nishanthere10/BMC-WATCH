@@ -64,7 +64,8 @@ export default function ProjectMap({ projects, userLocation }: ProjectMapProps) 
         center={center} 
         zoom={11} 
         style={{ height: "100%", width: "100%" }}
-        scrollWheelZoom={false}
+        scrollWheelZoom={true}
+        zoomControl={true}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -107,25 +108,32 @@ export default function ProjectMap({ projects, userLocation }: ProjectMapProps) 
               fillOpacity: 0.8,
             }}
           >
-            <Popup className="project-popup">
-              <div className="p-1 min-w-[180px]">
-                <h4 className="font-bold text-sm leading-tight mb-1">{project.title || "Untitled"}</h4>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-[10px] bg-secondary px-1.5 py-0.5 rounded text-secondary-foreground font-semibold">
+            <Popup className="project-popup" minWidth={220} closeButton={false}>
+              <div className="flex flex-col gap-2 p-1">
+                <div className="flex items-start justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-2 mb-1">
+                  <span className="cr-badge cr-badge-progress shrink-0 px-2 py-0.5 text-[9px] uppercase tracking-wider !font-mono">
                     Ward {project.ward || "N/A"}
                   </span>
-                  <div className="flex items-center gap-1 text-[10px] font-bold text-primary">
+                  <div className="flex items-center gap-1 text-[10px] font-bold text-[#1A7A3E] bg-[#1A7A3E]/10 dark:bg-[#1A7A3E]/20 px-2 py-0.5 rounded-full shrink-0 !font-mono">
                     <Percent size={10} />
                     {project.progress_percent || 0}%
                   </div>
                 </div>
                 
+                <div 
+                  className="font-extrabold text-[#003366] dark:text-slate-100 text-[13px] leading-snug line-clamp-2 mb-1"
+                  style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
+                >
+                  {project.title || "Untitled Project"}
+                </div>
+                
                 <Link 
                   href={`/projects/${project.id}`}
-                  className="flex items-center justify-center gap-2 w-full py-1.5 rounded bg-primary text-primary-foreground text-[10px] font-bold hover:opacity-90 transition-all"
+                  className="cr-btn cr-btn-primary w-full min-h-[32px] flex items-center justify-center gap-1.5 mt-2 rounded-lg text-[10px] uppercase font-bold tracking-wider !border-none !shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]"
+                  style={{ fontFamily: "'JetBrains Mono', 'Courier New', monospace" }}
                 >
-                  Project Details
-                  <ExternalLink size={10} />
+                  View Details
+                  <ExternalLink size={12} />
                 </Link>
               </div>
             </Popup>

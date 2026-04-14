@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { ScanLine, ClipboardList, Camera, ShieldCheck } from "lucide-react";
 
 const steps = [
@@ -48,7 +45,10 @@ export default function HowItWorks() {
         <div className="flex items-end justify-between mb-16 gap-4 flex-wrap border-b-2 border-slate-200 dark:border-slate-800 pb-8">
           <div>
             <span className="cr-section-title block mb-3">User Flow — How It Works</span>
-            <h2 className="font-heading font-extrabold text-slate-900 dark:text-white" style={{ fontSize: "clamp(2rem, 4vw, 3rem)", letterSpacing: "-0.04em", lineHeight: 1.05 }}>
+            <h2
+              className="font-extrabold text-slate-900 dark:text-white"
+              style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: "clamp(1.75rem, 3.5vw, 2.5rem)", letterSpacing: "-0.04em", lineHeight: 1.05 }}
+            >
               Built for Active Citizens
             </h2>
           </div>
@@ -60,12 +60,8 @@ export default function HowItWorks() {
         {/* Steps grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map((step, idx) => (
-            <motion.div
+            <div
               key={idx}
-              initial={{ opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.5, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
               className="relative bg-white dark:bg-[#0D1424] border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-6 
                          hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,85,164,0.12)] dark:hover:shadow-[6px_6px_0px_0px_rgba(56,189,248,0.08)]
                          transition-all duration-200 group"
@@ -86,13 +82,16 @@ export default function HowItWorks() {
                 Step {step.num}
               </span>
 
-              <h3 className="font-heading font-bold text-lg text-slate-900 dark:text-white mb-2" style={{ letterSpacing: "-0.02em" }}>
+              <div
+                className="font-extrabold text-slate-900 dark:text-white mb-2"
+                style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 17, letterSpacing: "-0.02em" }}
+              >
                 {step.title}
-              </h3>
+              </div>
               <p className="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
                 {step.description}
               </p>
-            </motion.div>
+            </div>
           ))}
         </div>
 

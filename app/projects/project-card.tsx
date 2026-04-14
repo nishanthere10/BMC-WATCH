@@ -1,8 +1,5 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { MapPin, HardHat, CircleDollarSign, ArrowRight } from "lucide-react";
 import type { Project } from "@/types/project";
 import { getProjectImage } from "@/types/project";
@@ -32,11 +29,8 @@ export default function ProjectCard({ project }: { project: Project }) {
     : "0";
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -6, transition: { duration: 0.2 } }}
-      className="cr-card group"
+    <div
+      className="cr-card group transition-transform duration-300 hover:-translate-y-1.5 animate-in fade-in fill-mode-both duration-500"
     >
       {/* Image Header */}
       <div className="relative h-48 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
@@ -77,11 +71,9 @@ export default function ProjectCard({ project }: { project: Project }) {
             <span className="text-[#0F172A] dark:text-white font-bold font-mono">{progress}%</span>
           </div>
           <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 1, ease: "easeOut" as const }}
-              className={cn("h-full rounded-full", progressColors[status] || progressColors["Planned"])}
+            <div
+              style={{ width: `${progress}%` }}
+              className={cn("h-full rounded-full transition-all duration-1000 ease-out", progressColors[status] || progressColors["Planned"])}
             />
           </div>
         </div>
@@ -112,6 +104,6 @@ export default function ProjectCard({ project }: { project: Project }) {
           <ArrowRight size={15} className="transition-transform group-hover/btn:translate-x-1" />
         </Link>
       </div>
-    </motion.div>
+    </div>
   );
 }

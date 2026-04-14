@@ -53,7 +53,7 @@ export interface Project {
 }
 
 // Convenience type for map-only data (lighter fetch)
-export type MapProject = Pick<Project, "id" | "title" | "latitude" | "longitude" | "status" | "ward">;
+export type MapProject = Pick<Project, "id" | "title" | "latitude" | "longitude" | "status" | "ward" | "progress_percent">;
 
 // Default placeholder images based on project type
 export const PROJECT_TYPE_IMAGES: Record<string, string> = {

@@ -7,7 +7,7 @@
 -- Linked to Supabase Auth. Auto-created on first login via trigger.
 create table public.user_profiles (
   id uuid not null references auth.users on delete cascade,
-  phone text,
+  email text,
   display_name text default 'Civic Observer',
   total_points integer default 0,
   total_ratings integer default 0,
@@ -48,6 +48,9 @@ create table public.project_ratings (
   ai_reasoning text,
   points_awarded integer default 0,
   status text default 'Pending',
+  blockchain_hash text,
+  blockchain_tx_hash text,
+  blockchain_verified boolean default false,
   created_at timestamp with time zone default timezone('utc', now()),
   constraint project_ratings_pkey primary key (id)
 );
@@ -65,13 +68,13 @@ create policy "Authenticated users can insert ratings"
 
 
 -- 3. AUTO-CREATE PROFILE ON SIGNUP (Trigger)
--- When a new user signs up via Phone OTP, this automatically
+-- When a new user signs up via Email OTP, this automatically
 -- creates their user_profiles row.
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.user_profiles (id, phone)
-  values (new.id, new.phone);
+  insert into public.user_profiles (id, email)
+  values (new.id, new.email);
   return new;
 end;
 $$ language plpgsql security definer;

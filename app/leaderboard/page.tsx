@@ -15,6 +15,7 @@ export default async function LeaderboardPage() {
   const { data: users } = await supabase
     .from("user_profiles")
     .select("id, display_name, total_points, badge_rank")
+    .gt("total_points", 0)
     .order("total_points", { ascending: false })
     .limit(50);
 

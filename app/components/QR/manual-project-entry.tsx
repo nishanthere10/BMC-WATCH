@@ -4,10 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search, AlertCircle, ArrowRight, Hash } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { projectExists } from "@/lib/projects";
 
 interface ManualProjectEntryProps {
@@ -26,8 +22,6 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
     setError(null);
     setIsLoading(true);
 
-    // Clean input to strip letters/symbols in case user types "ID: 5"
-    // Wait, the new Supabase IDs are UUIDs (strings) like "proj_...". We shouldn't strip letters!
     const cleanId = projectId.trim();
 
     if (!cleanId) {
@@ -36,56 +30,54 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
       return;
     }
 
-    // Check if project exists in database
     const exists = await projectExists(cleanId);
-
     if (exists) {
       router.push(`/projects/${cleanId}`);
     } else {
-      setError(
-        "Project ID not found. Please check the code on the site board.",
-      );
+      setError("Project ID not found. Please check the code on the site board.");
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="bg-white rounded-2xl border p-6 shadow-sm">
+    <div className="cr-card p-6">
+      {/* Header */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 bg-slate-100 rounded-lg text-slate-600">
-          <Hash size={20} />
+        <div className="w-10 h-10 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300">
+          <Hash size={18} />
         </div>
         <div>
-          <h3 className="font-bold">Manual Lookup</h3>
-          <p className="text-xs text-muted-foreground">
-            Type the ID printed below the QR code
+          <h3 className="font-heading font-bold text-slate-900 dark:text-white" style={{ letterSpacing: "-0.02em" }}>
+            Manual Lookup
+          </h3>
+          <p className="text-[11px] font-mono uppercase tracking-widest text-slate-400">
+            Type the ID printed below the QR
           </p>
         </div>
       </div>
 
       <form onSubmit={handleManualSubmit} className="space-y-4">
         <div className="relative">
-          <Input
+          <input
             placeholder="e.g. 1, 2, 5"
             value={projectId}
             onChange={(e) => {
               const rawValue = e.target.value;
               setProjectId(rawValue);
-              const cleanId = rawValue.trim();
-              onPreviewIdChange?.(cleanId);
+              onPreviewIdChange?.(rawValue.trim());
               setError(null);
             }}
-            className="h-12 pl-4 pr-12 text-lg font-mono tracking-wider"
+            className="cr-input h-12 pl-4 pr-12 text-lg font-mono tracking-wider"
           />
           <div className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-300">
-            <Search size={20} />
+            <Search size={18} />
           </div>
         </div>
 
-        <Button
+        <button
           type="submit"
           disabled={isLoading}
-          className="w-full h-12 text-md font-bold transition-all"
+          className="cr-btn-primary w-full h-12 text-base"
         >
           {isLoading ? (
             <motion.div
@@ -98,7 +90,7 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
               Find Project <ArrowRight size={18} />
             </span>
           )}
-        </Button>
+        </button>
 
         <AnimatePresence>
           {error && (
@@ -107,26 +99,18 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
             >
-              <Alert
-                variant="destructive"
-                className="bg-red-50 border-red-100 py-3"
-              >
-                <AlertCircle className="h-4 w-4" />
-                <AlertDescription className="text-xs font-medium">
-                  {error}
-                </AlertDescription>
-              </Alert>
+              <div className="cr-error-box flex items-center gap-2 text-xs">
+                <AlertCircle size={14} className="shrink-0" />
+                {error}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
       </form>
 
-      <div className="mt-6 pt-6 border-t border-dashed">
-        <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mb-2">
-          Try these IDs:
-        </p>
+      <div className="mt-5 pt-5 border-t-2 border-dashed border-slate-100 dark:border-slate-800">
+        <p className="cr-section-title mb-2">Try these IDs:</p>
         <div className="flex flex-wrap gap-2">
-          {/* Fallback tip, the actual IDs are long UUIDs now so clicking generic numbers won't work in prod, but left for structure */}
           {["1", "2"].map((id) => (
             <button
               key={id}
@@ -135,7 +119,7 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
                 onPreviewIdChange?.(id);
                 setError(null);
               }}
-              className="px-2 py-1 rounded bg-slate-100 text-slate-500 text-[10px] font-mono hover:bg-primary/10 hover:text-primary transition-colors"
+              className="px-3 py-1.5 rounded-lg border-2 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-[11px] font-mono font-bold hover:border-[#0055A4] hover:text-[#0055A4] dark:hover:border-[#38BDF8] dark:hover:text-[#38BDF8] transition-all duration-150"
             >
               ID: {id}
             </button>

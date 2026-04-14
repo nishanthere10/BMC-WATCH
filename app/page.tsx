@@ -27,24 +27,29 @@ export default function Home() {
             Citizens of Mumbai
           </span>
           <h2
-            className="font-heading font-extrabold text-white mb-6"
-            style={{ fontSize: "clamp(2.4rem, 5vw, 4rem)", letterSpacing: "-0.04em", lineHeight: 1.0 }}
+            className="font-extrabold text-white mb-6"
+            style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: "clamp(2rem, 4.5vw, 3.5rem)", letterSpacing: "-0.04em", lineHeight: 1.05 }}
           >
             Ready to Drive Change?
           </h2>
-          <p className="text-white/70 font-medium text-lg mb-12 max-w-xl mx-auto leading-relaxed">
+          <p
+            className="text-white/70 font-medium text-lg mb-12 max-w-xl mx-auto leading-relaxed"
+            style={{ fontFamily: "'IBM Plex Sans', system-ui, sans-serif" }}
+          >
             Join thousands of active citizens holding contractors accountable. Every scan counts.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/scan"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-bold rounded-xl border-2 border-white bg-white text-[#0055A4] shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)] hover:translate-y-[2px] transition-all duration-150"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 font-bold rounded-xl border-2 border-white bg-white text-[#0055A4] shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)] hover:translate-y-[2px] transition-all duration-150"
+              style={{ fontFamily: "'IBM Plex Sans', system-ui, sans-serif", fontSize: 15 }}
             >
               Start Scanning
             </a>
             <a
               href="/nearby"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-bold rounded-xl border-2 border-white/40 text-white hover:border-white hover:bg-white/10 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.08)] hover:translate-y-[2px] transition-all duration-150"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 font-bold rounded-xl border-2 border-[#F47920] bg-[#F47920] text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)] hover:translate-y-[2px] transition-all duration-150"
+              style={{ fontFamily: "'IBM Plex Sans', system-ui, sans-serif", fontSize: 15 }}
             >
               Explore Ward Map
             </a>
