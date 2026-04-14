@@ -122,7 +122,6 @@ export default function ProjectMap({ projects, userLocation }: ProjectMapProps) 
                 
                 <div 
                   className="font-extrabold text-[#003366] dark:text-slate-100 text-[13px] leading-snug line-clamp-2 mb-1"
-                  style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
                 >
                   {project.title || "Untitled Project"}
                 </div>
@@ -130,7 +129,6 @@ export default function ProjectMap({ projects, userLocation }: ProjectMapProps) 
                 <Link 
                   href={`/projects/${project.id}`}
                   className="cr-btn cr-btn-primary w-full min-h-[32px] flex items-center justify-center gap-1.5 mt-2 rounded-lg text-[10px] uppercase font-bold tracking-wider !border-none !shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]"
-                  style={{ fontFamily: "'JetBrains Mono', 'Courier New', monospace" }}
                 >
                   View Details
                   <ExternalLink size={12} />

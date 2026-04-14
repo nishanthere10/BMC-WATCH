@@ -27,7 +27,7 @@ export default function AppFeatures() {
             <span className="cr-section-title block mb-3">Core Capabilities</span>
             <h2
               className="font-extrabold text-slate-900 dark:text-white"
-              style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: "clamp(1.75rem, 3.5vw, 2.6rem)", letterSpacing: "-0.04em", lineHeight: 1.05 }}
+              style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.6rem)", letterSpacing: "-0.04em", lineHeight: 1.05 }}
             >
               Everything to hold the<br />system accountable.
             </h2>
@@ -49,7 +49,7 @@ export default function AppFeatures() {
                 </div>
                 <span className="cr-badge-progress">Real-Time</span>
               </div>
-              <div className="font-extrabold text-slate-900 dark:text-white mb-2" style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 20, letterSpacing: "-0.03em" }}>
+              <div className="font-extrabold text-slate-900 dark:text-white mb-2" style={{ fontSize: 20, letterSpacing: "-0.03em" }}>
                 Live Civic Dashboard
               </div>
               <p className="text-sm font-medium text-slate-500 dark:text-slate-400 leading-relaxed max-w-sm">
@@ -71,7 +71,7 @@ export default function AppFeatures() {
               <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border-2 border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400 mb-4">
                 <ShieldCheck size={24} />
               </div>
-              <div className="font-extrabold text-slate-900 dark:text-white mb-2" style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 18, letterSpacing: "-0.03em" }}>
+              <div className="font-extrabold text-slate-900 dark:text-white mb-2" style={{ fontSize: 18, letterSpacing: "-0.03em" }}>
                 AI Diagnostics
               </div>
               <p className="text-sm font-medium text-slate-500 dark:text-slate-400 leading-relaxed">
@@ -87,7 +87,7 @@ export default function AppFeatures() {
               <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/60 border-2 border-amber-200 dark:border-amber-800 flex items-center justify-center text-amber-600 dark:text-amber-400 mb-4">
                 <Users size={24} />
               </div>
-              <div className="font-extrabold text-slate-900 dark:text-white mb-2" style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 18, letterSpacing: "-0.03em" }}>
+              <div className="font-extrabold text-slate-900 dark:text-white mb-2" style={{ fontSize: 18, letterSpacing: "-0.03em" }}>
                 Civic Leaderboard
               </div>
               <p className="text-sm font-medium text-slate-500 dark:text-slate-400 leading-relaxed">
@@ -115,7 +115,7 @@ export default function AppFeatures() {
                   API Access
                 </span>
               </div>
-              <div className="font-extrabold text-white mb-2" style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 20, letterSpacing: "-0.03em" }}>
+              <div className="font-extrabold text-white mb-2" style={{ fontSize: 20, letterSpacing: "-0.03em" }}>
                 Open Civic Data
               </div>
               <p className="text-sm font-medium text-slate-300 leading-relaxed max-w-sm">

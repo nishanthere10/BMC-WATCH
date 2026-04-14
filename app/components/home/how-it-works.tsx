@@ -47,7 +47,7 @@ export default function HowItWorks() {
             <span className="cr-section-title block mb-3">User Flow — How It Works</span>
             <h2
               className="font-extrabold text-slate-900 dark:text-white"
-              style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: "clamp(1.75rem, 3.5vw, 2.5rem)", letterSpacing: "-0.04em", lineHeight: 1.05 }}
+              style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.5rem)", letterSpacing: "-0.04em", lineHeight: 1.05 }}
             >
               Built for Active Citizens
             </h2>
@@ -84,7 +84,7 @@ export default function HowItWorks() {
 
               <div
                 className="font-extrabold text-slate-900 dark:text-white mb-2"
-                style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 17, letterSpacing: "-0.02em" }}
+                style={{ fontSize: 17, letterSpacing: "-0.02em" }}
               >
                 {step.title}
               </div>

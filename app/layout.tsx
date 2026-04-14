@@ -1,35 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Sans, DM_Sans, Merriweather, JetBrains_Mono, Syne } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import "leaflet/dist/leaflet.css";
 import Navbar from "@/app/components/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 
-const ibmPlex = IBM_Plex_Sans({
-  variable: "--font-ibm-plex",
-  weight: ["300", "400", "500", "600", "700"],
-  subsets: ["latin"],
-});
-
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin"],
-});
-
-const merriweather = Merriweather({
-  variable: "--font-merriweather",
-  weight: ["400", "700", "900"],
-  subsets: ["latin"],
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-});
-
-const syne = Syne({
-  variable: "--font-syne",
-  weight: ["400", "500", "600", "700", "800"],
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
@@ -58,7 +35,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${ibmPlex.variable} ${dmSans.variable} ${merriweather.variable} ${jetbrainsMono.variable} ${syne.variable} h-full antialiased`}
+      className={`${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

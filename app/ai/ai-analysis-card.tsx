@@ -47,7 +47,7 @@ export default function AIAnalysisCard({ analysis }: { analysis: AIVerdict }) {
             <p className="text-sm font-black text-[#B91C1C] uppercase tracking-widest font-mono">
               Photo Not Verified
             </p>
-            <p className="text-xs text-[#B91C1C]/70 mt-1 leading-relaxed font-medium" style={{ fontFamily: "'IBM Plex Sans', system-ui, sans-serif" }}>
+            <p className="text-xs text-[#B91C1C]/70 mt-1 leading-relaxed font-medium">
               {analysis.rejection_reason ??
                 "This photo doesn\u2019t appear to show a valid construction site."}
             </p>
@@ -78,13 +78,11 @@ export default function AIAnalysisCard({ analysis }: { analysis: AIVerdict }) {
           <div>
             <p
               className="text-[11px] font-black text-[#1A7A3E] dark:text-emerald-400 uppercase tracking-[0.14em]"
-              style={{ fontFamily: "'JetBrains Mono', 'Courier New', monospace" }}
             >
               Site Verified · AI Review
             </p>
             <p
               className="text-[9px] text-slate-400 uppercase tracking-widest mt-0.5"
-              style={{ fontFamily: "'JetBrains Mono', 'Courier New', monospace" }}
             >
               Groq LLaMA · BMC Civic Watch
             </p>
@@ -108,7 +106,6 @@ export default function AIAnalysisCard({ analysis }: { analysis: AIVerdict }) {
         {/* Diagnosis summary */}
         <div
           className="cr-info-box"
-          style={{ fontFamily: "'IBM Plex Sans', system-ui, sans-serif" }}
         >
           <p className="text-sm font-medium text-[#0F172A] dark:text-slate-200 leading-relaxed italic">
             &ldquo;{analysis.diagnosis_summary}&rdquo;
@@ -121,7 +118,6 @@ export default function AIAnalysisCard({ analysis }: { analysis: AIVerdict }) {
             <BotMessageSquare size={14} className="text-[#0055A4] dark:text-[#38BDF8] shrink-0" />
             <span
               className="cr-section-title"
-              style={{ fontFamily: "'IBM Plex Sans', system-ui, sans-serif" }}
             >
               AI Suggested Rating
             </span>
@@ -140,7 +136,6 @@ export default function AIAnalysisCard({ analysis }: { analysis: AIVerdict }) {
             ))}
             <span
               className="ml-2 text-[11px] font-black text-slate-500 dark:text-slate-400"
-              style={{ fontFamily: "'JetBrains Mono', monospace" }}
             >
               {analysis.suggested_rating}/5
             </span>
@@ -184,13 +179,11 @@ export default function AIAnalysisCard({ analysis }: { analysis: AIVerdict }) {
             <div className="min-w-0">
               <p
                 className="cr-section-title text-[#0055A4] dark:text-[#38BDF8] mb-1.5"
-                style={{ fontFamily: "'JetBrains Mono', monospace" }}
               >
                 Use this in your comment
               </p>
               <p
                 className="text-[12px] italic text-[#334155] dark:text-slate-300 leading-relaxed"
-                style={{ fontFamily: "'IBM Plex Sans', system-ui, sans-serif" }}
               >
                 {analysis.opinion_starter}
               </p>
@@ -201,7 +194,6 @@ export default function AIAnalysisCard({ analysis }: { analysis: AIVerdict }) {
         {/* Footer attribution */}
         <div
           className="flex items-center justify-end gap-1.5 pt-1"
-          style={{ fontFamily: "'JetBrains Mono', monospace" }}
         >
           <BotMessageSquare size={11} className="text-slate-400" />
           <span className="text-[10px] text-slate-400 dark:text-slate-600 uppercase tracking-widest">
@@ -235,7 +227,7 @@ function CheckpointSection({
     <div className="px-4 py-3.5 space-y-2.5">
       <div
         className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.14em] ${labelClass}`}
-        style={{ fontFamily: "'JetBrains Mono', 'Courier New', monospace", fontSize: 10 }}
+        style={{ fontSize: 10 }}
       >
         {icon}
         {label}
@@ -245,7 +237,6 @@ function CheckpointSection({
           <li
             key={i}
             className="flex items-start gap-2.5 text-[12px] text-[#475569] dark:text-slate-400 font-medium leading-relaxed"
-            style={{ fontFamily: "'IBM Plex Sans', system-ui, sans-serif" }}
           >
             <span className={`w-1.5 h-1.5 rounded-full mt-[5px] shrink-0 opacity-80 ${dotClass}`} />
             {item}

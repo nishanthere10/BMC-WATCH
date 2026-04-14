@@ -56,7 +56,7 @@ export default function ProfilePage() {
         .from("project_ratings")
         .select(`
           *,
-          projects ( id, title, location )
+          bmc_projects ( id, title, location )
         `)
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
@@ -251,11 +251,10 @@ export default function ProfilePage() {
                         {/* Title and date */}
                         <div className="flex flex-wrap items-start justify-between gap-2 mb-2">
                           <Link 
-                            href={`/projects/${r.projects?.id}`}
+                            href={`/projects/${r.bmc_projects?.id}`}
                             className="font-bold text-[#003366] dark:text-slate-200 text-lg hover:text-[#0055A4] hover:underline"
-                            style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
                           >
-                            {r.projects?.title || "Unknown Project"}
+                            {r.bmc_projects?.title || "Unknown Project"}
                           </Link>
                           
                           <div className="flex items-center gap-2 shrink-0">
