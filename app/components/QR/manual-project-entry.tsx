@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search, AlertCircle, ArrowRight, Hash } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { projectExists } from "@/lib/projects";
+import { getProjectById } from "@/lib/projects";
 
 interface ManualProjectEntryProps {
   previewId?: string;
@@ -30,11 +30,11 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
       return;
     }
 
-    const exists = await projectExists(cleanId);
-    if (exists) {
-      router.push(`/projects/${cleanId}`);
+    const project = await getProjectById(cleanId);
+    if (project) {
+      router.push(`/projects/${project.id}`);
     } else {
-      setError("Project ID not found. Please check the code on the site board.");
+      setError("Project not found. Try a work code like E-289 or W-414.");
       setIsLoading(false);
     }
   };
@@ -59,7 +59,7 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
       <form onSubmit={handleManualSubmit} className="space-y-4">
         <div className="relative">
           <input
-            placeholder="e.g. 1, 2, 5"
+            placeholder="e.g. E-289, W-414"
             value={projectId}
             onChange={(e) => {
               const rawValue = e.target.value;
@@ -111,7 +111,7 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
       <div className="mt-5 pt-5 border-t-2 border-dashed border-slate-100 dark:border-slate-800">
         <p className="cr-section-title mb-2">Try these IDs:</p>
         <div className="flex flex-wrap gap-2">
-          {["1", "2"].map((id) => (
+          {["E-289", "W-414"].map((id) => (
             <button
               key={id}
               onClick={() => {

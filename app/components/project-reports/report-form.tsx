@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Star, UserCircle } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { toast } from "sonner";
 
 import { useAuth } from "@/app/hooks/use-auth";
 
@@ -92,7 +93,7 @@ export default function ProjectRatingForm({ projectId, onSuccess }: RatingFormPr
   const onSubmit = async (data: RatingFormValues) => {
     // Block submission if AI flagged it as spam
     if (aiAnalysis && !aiAnalysis.is_genuine) {
-      alert("Your photo was not verified as a genuine site photo. Please retake the photo at the actual project site.");
+      toast.error("Your photo was not verified as a genuine site photo. Please retake the photo at the actual project site.");
       return;
     }
 
@@ -150,9 +151,9 @@ export default function ProjectRatingForm({ projectId, onSuccess }: RatingFormPr
       const message = error instanceof Error ? error.message : "";
       console.error("Submission failed:", error);
       if (message.includes("STORAGE_MISSING")) {
-        alert(message);
+        toast.error(message);
       } else {
-        alert("Failed to submit rating. Please try again.");
+        toast.error("Failed to submit rating. Please try again.");
       }
     } finally {
       setIsSubmitting(false);

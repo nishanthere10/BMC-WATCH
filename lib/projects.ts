@@ -72,32 +72,42 @@ export async function getProjects(filters: ProjectFilters = {}): Promise<Paginat
 
 // ─── Single project by ID ──────────────────────────────────────────────
 export async function getProjectById(idOrCode: string): Promise<Project | null> {
-  const { data, error } = await supabase
+  // First try exact id match
+  const { data: exactMatch, error: exactError } = await supabase
     .from("bmc_projects")
     .select(PROJECT_FIELDS)
-    .or(`id.eq.${idOrCode},work_code.ilike.%${idOrCode}%`)
+    .eq("id", idOrCode)
+    .maybeSingle();
+
+  if (!exactError && exactMatch) return exactMatch as Project;
+
+  // Then try work_code match (case-insensitive)
+  const { data: codeMatch, error: codeError } = await supabase
+    .from("bmc_projects")
+    .select(PROJECT_FIELDS)
+    .ilike("work_code", `%${idOrCode}%`)
     .limit(1)
     .maybeSingle();
 
-  if (error) {
-    console.error("Error fetching project:", error.message);
-    return null;
-  }
+  if (!codeError && codeMatch) return codeMatch as Project;
 
-  return data as Project;
+  // Finally try partial id slug match (e.g. user types "e_289")
+  const { data: slugMatch, error: slugError } = await supabase
+    .from("bmc_projects")
+    .select(PROJECT_FIELDS)
+    .ilike("id", `%${idOrCode}%`)
+    .limit(1)
+    .maybeSingle();
+
+  if (!slugError && slugMatch) return slugMatch as Project;
+
+  return null;
 }
 
 // ─── Check if project exists (lightweight) ─────────────────────────────
 export async function projectExists(idOrCode: string): Promise<boolean> {
-  // Check if it matches id or work_code
-  const { data, error } = await supabase
-    .from("bmc_projects")
-    .select("id")
-    .or(`id.eq.${idOrCode},work_code.ilike.%${idOrCode}%`)
-    .limit(1)
-    .maybeSingle();
-
-  return !error && data !== null;
+  const project = await getProjectById(idOrCode);
+  return project !== null;
 }
 
 // ─── Get all map projects (only coords + status) ───────────────────────

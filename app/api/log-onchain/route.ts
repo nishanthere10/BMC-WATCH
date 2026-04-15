@@ -1,15 +1,21 @@
 import { NextResponse } from "next/server";
 import { createHash } from "crypto"; // ✅ Node built-in — no install needed
 import { createClient } from "@supabase/supabase-js";
+import { LogOnchainSchema } from "@/lib/schemas";
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { reportId, payload } = body;
+    const validation = LogOnchainSchema.safeParse(body);
 
-    if (!reportId || !payload) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: "Validation Error", details: validation.error.format() },
+        { status: 400 }
+      );
     }
+
+    const { reportId, payload } = validation.data;
 
     // 1. Hash the payload using Node's built-in crypto (no external package needed)
     const payloadString = JSON.stringify(payload);

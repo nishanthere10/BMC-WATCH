@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getGroq } from "@/lib/groq";
 import { GROQ_PROJECT_INSIGHTS_PROMPT } from "@/lib/prompts";
+import { ProjectInsightsSchema } from "@/lib/schemas";
 
 export async function POST(req: NextRequest) {
   try {
-    const { projectData } = await req.json();
+    const body = await req.json();
+    const validation = ProjectInsightsSchema.safeParse(body);
 
-    if (!projectData) {
-      return NextResponse.json({ error: "Missing projectData" }, { status: 400 });
+    if (!validation.success) {
+      return NextResponse.json(
+        { error: "Validation Error", details: validation.error.format() },
+        { status: 400 }
+      );
     }
+
+    const { projectData } = validation.data;
 
     const groq = getGroq();
 

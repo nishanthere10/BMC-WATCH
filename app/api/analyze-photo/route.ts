@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getGroq } from "@/lib/groq";
 import { GROQ_SITE_AUDITOR_PROMPT } from "@/lib/prompts";
+import { AnalyzePhotoSchema } from "@/lib/schemas";
 
 // Simple in-memory rate limiter (per-instance; use Redis for production)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
@@ -48,15 +49,16 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { imageUrl } = body;
+    const validation = AnalyzePhotoSchema.safeParse(body);
 
-    // Input validation
-    if (!imageUrl || typeof imageUrl !== "string") {
+    if (!validation.success) {
       return NextResponse.json(
-        { error: "Missing or invalid imageUrl" },
+        { error: "Validation Error", details: validation.error.format() },
         { status: 400 }
       );
     }
+
+    const { imageUrl } = validation.data;
 
     // SSRF protection: only allow images from our Supabase storage
     if (!isAllowedImageUrl(imageUrl)) {
