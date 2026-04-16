@@ -1,0 +1,136 @@
+{
+  "nav": {
+    "nearby": "Nearby Works",
+    "leaderboard": "Leaderboard",
+    "dashboard": "Civic Audit",
+    "scan": "Scan",
+    "login": "Login",
+    "profile": "My Profile",
+    "reports": "My Reports",
+    "logout": "Sign Out"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error occurred",
+    "search": "Search"
+  },
+  "scan": {
+    "title": "Identify a Project",
+    "subtitle": "Scan the QR code on any BMC work site board to see budget, timeline, and contractor details.",
+    "mode": "Scanner Mode",
+    "camera": "Camera",
+    "manual": "Manual ID",
+    "result": "Scanned Result",
+    "close": "Close"
+  },
+  "manual_entry": {
+    "title": "Manual Lookup",
+    "subtitle": "Type the ID printed below the QR",
+    "placeholder": "e.g. E-289, W-414",
+    "btn_find": "Find Project",
+    "err_empty": "Please enter a Project ID.",
+    "err_not_found": "Project not found. Try a work code like E-289 or W-414.",
+    "try_ids": "Try these IDs:"
+  },
+  "scanner_status": {
+    "idle": "Ready to Scan",
+    "scanning": "Scanning for QR Code...",
+    "success": "Project Identified!",
+    "error": "Invalid Code"
+  },
+  "nearby": {
+    "live_data": "Live Civic Data",
+    "title": "Nearby Civic Works",
+    "subtitle": "Real-time transparency into BMC projects across Mumbai. Tracking your taxes, one road at a time.",
+    "nearby_count": "Nearby",
+    "total_found": "Total Found",
+    "page": "Page",
+    "of": "of",
+    "map": "Map",
+    "grid": "Grid",
+    "prev": "Previous",
+    "next": "Next",
+    "empty_title": "No projects found",
+    "empty_desc": "Try adjusting your filters, search terms, or radius."
+  },
+  "filters": {
+    "search": "Search by project name, ward, or location...",
+    "filter_label": "Filter",
+    "all_types": "All Types",
+    "project_type": "Project Type",
+    "all_statuses": "All Statuses",
+    "status": "Status",
+    "all_wards": "All Wards",
+    "ward_prefix": "Ward",
+    "ward": "Ward"
+  },
+  "location_prompt": {
+    "err_not_supported": "Geolocation is not supported by your browser.",
+    "err_denied": "Location access denied. Please enable location in browser settings.",
+    "err_unable": "Unable to determine your location. Try again.",
+    "showing": "Showing",
+    "all": "all",
+    "projects": "projects",
+    "within": "within",
+    "km": "km",
+    "share_title": "Share your location",
+    "share_subtitle": "See only nearby road works on the map",
+    "locating": "Locating…",
+    "share_btn": "Share Location",
+    "all_btn": "All"
+  },
+  "project_card": {
+    "ward": "Ward",
+    "na": "N/A",
+    "untitled": "Untitled Project",
+    "no_loc": "Location not specified",
+    "completion": "Completion",
+    "budget": "Budget",
+    "cr": "Cr",
+    "contractor": "Contractor",
+    "view": "View Full Transparency"
+  },
+  "dashboard": {
+    "title": "Mumbai Civic Audit",
+    "subtitle_prefix": "Real-time oversight of ",
+    "subtitle_suffix": " in public infrastructure works.",
+    "live_intelligence": "Live Intelligence Feed",
+    "live_feed": "Live Feed",
+    "total_works": "Total Works Tracked",
+    "active_reports": "Active Citizen Reports",
+    "delay_rate": "Overall Delay Rate",
+    "trend_attention": "Needs Attention",
+    "most_active_ward": "Most Active Ward",
+    "data_unavail": "Data unavailable",
+    "heatmap_title": "Live Site Heatmap",
+    "heatmap_sub": "Spatial distribution of active & delayed works",
+    "healthy": "Healthy",
+    "critical": "Critical",
+    "recent_audits": "Recent AI Audits",
+    "leaderboard": "Ward Performance Leaderboard",
+    "leaderboard_sub": "Ranked by citizen engagement and project health",
+    "sorted_by": "Sorted by Citizen Reports"
+  },
+  "leaderboard": {
+    "title": "Civic Leaderboard",
+    "subtitle": "Recognizing the top citizens auditing Mumbai's road infrastructure.",
+    "rank": "Rank",
+    "citizen": "Citizen",
+    "points": "Points"
+  },
+  "profile": {
+    "verified_citizen": "Verified Citizen",
+    "total_points": "Total Points",
+    "current_rank": "Current Rank",
+    "total_audits": "Total Audits",
+    "recent_audits": "My Recent Audits (Top 10)",
+    "no_audits": "No audits yet",
+    "no_audits_sub": "Start auditing nearby projects to earn points and climb the leaderboard.",
+    "find_nearby": "Find Projects Nearby",
+    "verified_badge": "Verified",
+    "unknown_proj": "Unknown Project",
+    "pts": "pts",
+    "no_comment": "No comment provided.",
+    "logged_polygon": "Logged on Polygon Amoy network • "
+  }
+}

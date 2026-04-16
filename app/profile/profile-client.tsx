@@ -7,6 +7,7 @@ import { Award, Star as StarIcon, History, Edit2, CheckCircle2, ShieldCheck, Use
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/app/components/I18nProvider";
 
 export interface UserProfile {
   id: string;
@@ -24,6 +25,7 @@ interface ProfileClientProps {
 }
 
 export default function ProfileClient({ initialProfile, userRatings }: ProfileClientProps) {
+  const { t } = useTranslations();
   const [profile, setProfile] = useState<UserProfile | null>(initialProfile);
   const [isEditing, setIsEditing] = useState(false);
   const [newName, setNewName] = useState(initialProfile?.display_name || "");
@@ -48,7 +50,7 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
   if (!profile) return null;
 
   return (
-    <div className="min-h-screen px-4 py-24 pb-32">
+    <div className="min-h-screen bg-white dark:bg-[#070D1A] px-4 py-24 pb-32 transition-colors duration-300">
       <div className="mx-auto max-w-2xl space-y-6">
         
         {/* Header Strip */}
@@ -99,7 +101,7 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
               </div>
               <div className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400 font-mono bg-slate-100/50 dark:bg-slate-800/50 w-fit px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700">
                 <ShieldCheck size={14} className="text-emerald-500" />
-                Verified Citizen • {profile.email}
+                {t('profile.verified_citizen')} • {profile.email}
               </div>
             </div>
           </div>
@@ -116,7 +118,7 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
             <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-[#2563EB] dark:text-[#38BDF8] rounded-xl flex items-center justify-center mb-1">
               <Award size={24} />
             </div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Points</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{t('profile.total_points')}</p>
             <p className="text-3xl font-extrabold font-mono text-slate-900 dark:text-white">{profile.total_points.toLocaleString()}</p>
           </motion.div>
 
@@ -129,7 +131,7 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
             <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-500 rounded-xl flex items-center justify-center mb-1">
               <StarIcon size={24} />
             </div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Current Rank</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{t('profile.current_rank')}</p>
             <p className="text-xl font-extrabold font-heading text-slate-900 dark:text-white mt-1 break-words leading-tight">{profile.badge_rank}</p>
           </motion.div>
 
@@ -142,7 +144,7 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
             <div className="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 text-amber-500 rounded-xl flex items-center justify-center mb-1">
               <History size={24} />
             </div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Audits</p>
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{t('profile.total_audits')}</p>
             <p className="text-3xl font-extrabold font-mono text-slate-900 dark:text-white">{profile.total_ratings}</p>
           </motion.div>
         </div>
@@ -152,7 +154,7 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
           <div className="flex items-center justify-between">
             <h3 className="font-extrabold text-xl text-slate-900 dark:text-white flex items-center gap-2">
               <History size={20} className="text-[#2563EB] dark:text-[#38BDF8]" />
-              My Recent Audits (Top 10)
+              {t('profile.recent_audits')}
             </h3>
           </div>
 
@@ -161,10 +163,10 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
               <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
                 <StarIcon size={24} className="text-slate-400" />
               </div>
-              <h4 className="font-bold text-slate-700 dark:text-slate-300 mb-2">No audits yet</h4>
-              <p className="text-sm text-slate-500 mb-6">Start auditing nearby projects to earn points and climb the leaderboard.</p>
+              <h4 className="font-bold text-slate-700 dark:text-slate-300 mb-2">{t('profile.no_audits')}</h4>
+              <p className="text-sm text-slate-500 mb-6">{t('profile.no_audits_sub')}</p>
               <Link href="/nearby" className="cr-btn-primary">
-                Find Projects Nearby
+                {t('profile.find_nearby')}
               </Link>
             </div>
           ) : (
@@ -189,7 +191,7 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
                       />
                       {r.is_genuine && (
                         <div className="absolute top-2 left-2 flex items-center gap-1.5 px-2 py-1 rounded bg-[#1A7A3E] text-white text-[10px] font-bold tracking-wider font-mono shadow-md border border-white/20">
-                          <ShieldCheck size={11} /> Verified
+                          <ShieldCheck size={11} /> {t('profile.verified_badge')}
                         </div>
                       )}
                     </div>
@@ -203,13 +205,13 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
                             href={`/projects/${r.bmc_projects?.id}`}
                             className="font-bold text-[#003366] dark:text-slate-200 text-lg hover:text-[#0055A4] hover:underline"
                           >
-                            {r.bmc_projects?.title || "Unknown Project"}
+                            {r.bmc_projects?.title || t('profile.unknown_proj')}
                           </Link>
                           
                           <div className="flex items-center gap-2 shrink-0">
                             {r.points_awarded > 0 && (
                               <span className="cr-badge cr-badge-progress text-[10px]">
-                                +{r.points_awarded} pts
+                                +{r.points_awarded} {t('profile.pts')}
                               </span>
                             )}
                             <span className="text-[11px] text-slate-500 flex items-center gap-1 font-mono">
@@ -241,7 +243,7 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
                             ))}
                           </div>
                           <p className="text-[13px] text-slate-600 dark:text-slate-300 italic line-clamp-2">
-                            &ldquo;{r.comment || "No comment provided."}&rdquo;
+                            &ldquo;{r.comment || t('profile.no_comment')}&rdquo;
                           </p>
                         </div>
                       </div>
@@ -250,7 +252,7 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
                       {r.blockchain_verified && (
                         <div className="flex items-center gap-1 mt-3 text-[10px] sm:text-[11px] text-[#2563EB] dark:text-[#38BDF8] font-mono">
                           <CheckCircle2 size={12} />
-                          <span>Logged on Polygon Amoy network • </span>
+                          <span>{t('profile.logged_polygon')}</span>
                           <a 
                             href={`https://amoy.polygonscan.com/tx/${r.blockchain_tx_hash}`}
                             target="_blank"

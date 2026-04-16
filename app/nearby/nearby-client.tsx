@@ -14,6 +14,7 @@ import { filterByRadius } from "@/lib/geo-utils";
 import type { MapProject } from "@/types/project";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
+import { useTranslations } from "@/app/components/I18nProvider";
 
 interface NearbyClientProps {
   initialData: PaginatedProjects;
@@ -22,6 +23,7 @@ interface NearbyClientProps {
 }
 
 export default function NearbyClient({ initialData, mapProjects, filterOptions }: NearbyClientProps) {
+  const { t } = useTranslations();
   const [data, setData] = useState<PaginatedProjects>(initialData);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -107,7 +109,7 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
   };
 
   return (
-    <div className="min-h-screen transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-[#070D1A] transition-colors duration-300">
       <main className="pb-20 pt-24">
         {/* Page Header */}
         <div className="container px-4 md:px-8 mb-8">
@@ -116,13 +118,13 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
           >
             <div className="space-y-2">
               <div className="cr-badge cr-badge-progress uppercase tracking-widest backdrop-blur-sm">
-                <Activity size={12} /> Live Civic Data
+                <Activity size={12} /> {t('nearby.live_data')}
               </div>
               <h1 className="cr-page-title text-left">
-                Nearby Civic Works
+                {t('nearby.title')}
               </h1>
               <p className="cr-page-subtitle !mx-0 text-left">
-                Real-time transparency into BMC projects across Mumbai. Tracking your taxes, one road at a time.
+                {t('nearby.subtitle')}
               </p>
             </div>
 
@@ -132,7 +134,7 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
             >
               <div className="cr-card px-6 py-4 text-center">
                 <p className="cr-section-title mb-1">
-                  {userLocation && !showAll ? "Nearby" : "Total Found"}
+                  {userLocation && !showAll ? t('nearby.nearby_count') : t('nearby.total_found')}
                 </p>
                 <p className="text-3xl font-black font-mono text-[#0F172A] dark:text-white">
                   {userLocation && !showAll ? filteredMapProjects.length : data.total}
@@ -171,14 +173,14 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
           <Tabs defaultValue="map" className="space-y-6">
             <div className="flex items-center justify-between">
               <p className="cr-section-title flex items-center gap-2">
-                <Layers3 size={14} /> Page <span className="font-mono">{data.page}</span> of <span className="font-mono">{data.totalPages || 1}</span>
+                <Layers3 size={14} /> {t('nearby.page')} <span className="font-mono">{data.page}</span> {t('nearby.of')} <span className="font-mono">{data.totalPages || 1}</span>
               </p>
               <TabsList className="cr-glass-subtle p-1 h-auto">
                 <TabsTrigger value="map" className="flex items-center gap-2 rounded-lg data-[state=active]:bg-[#2563EB] data-[state=active]:text-white data-[state=active]:shadow-sm text-xs font-semibold px-4 py-2 transition-all">
-                  <MapIcon size={14} /> Map
+                  <MapIcon size={14} /> {t('nearby.map')}
                 </TabsTrigger>
                 <TabsTrigger value="grid" className="flex items-center gap-2 rounded-lg data-[state=active]:bg-[#2563EB] data-[state=active]:text-white data-[state=active]:shadow-sm text-xs font-semibold px-4 py-2 transition-all">
-                  <LayoutGrid size={14} /> Grid
+                  <LayoutGrid size={14} /> {t('nearby.grid')}
                 </TabsTrigger>
               </TabsList>
             </div>
@@ -213,7 +215,7 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
                           onClick={() => setPage(p => Math.max(1, p - 1))}
                           className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md rounded-xl"
                         >
-                          <ChevronLeft className="mr-2 h-4 w-4" /> Previous
+                          <ChevronLeft className="mr-2 h-4 w-4" /> {t('nearby.prev')}
                         </Button>
                         <span className="text-sm font-semibold text-slate-600 dark:text-slate-400">
                           {page} / {data.totalPages}
@@ -224,7 +226,7 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
                           onClick={() => setPage(p => Math.min(data.totalPages, p + 1))}
                           className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-md rounded-xl"
                         >
-                          Next <ChevronRight className="ml-2 h-4 w-4" />
+                          {t('nearby.next')} <ChevronRight className="ml-2 h-4 w-4" />
                         </Button>
                       </div>
                     )}
@@ -237,8 +239,8 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
                       <Search size={36} className="text-[#64748B] dark:text-slate-500" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-[#0F172A] dark:text-white">No projects found</h3>
-                      <p className="text-[#64748B] dark:text-slate-400 mt-1 font-medium">Try adjusting your filters, search terms, or radius.</p>
+                      <h3 className="text-xl font-bold text-[#0F172A] dark:text-white">{t('nearby.empty_title')}</h3>
+                      <p className="text-[#64748B] dark:text-slate-400 mt-1 font-medium">{t('nearby.empty_desc')}</p>
                     </div>
                   </div>
                 )}

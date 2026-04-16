@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, AlertCircle, ArrowRight, Hash } from "lucide-react";
+import { Hash, Map, Search, ArrowRight, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getProjectById } from "@/lib/projects";
+import { useTranslations } from "@/app/components/I18nProvider";
 
 interface ManualProjectEntryProps {
   previewId?: string;
@@ -16,6 +17,7 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { t } = useTranslations();
 
   const handleManualSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,7 +27,7 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
     const cleanId = projectId.trim();
 
     if (!cleanId) {
-      setError("Please enter a Project ID.");
+      setError(t('manual_entry.err_empty'));
       setIsLoading(false);
       return;
     }
@@ -34,7 +36,7 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
     if (project) {
       router.push(`/projects/${project.id}`);
     } else {
-      setError("Project not found. Try a work code like E-289 or W-414.");
+      setError(t('manual_entry.err_not_found'));
       setIsLoading(false);
     }
   };
@@ -48,10 +50,10 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
         </div>
         <div>
           <h3 className="font-heading font-bold text-slate-900 dark:text-white" style={{ letterSpacing: "-0.02em" }}>
-            Manual Lookup
+            {t('manual_entry.title')}
           </h3>
           <p className="text-[11px] font-mono uppercase tracking-widest text-slate-400">
-            Type the ID printed below the QR
+            {t('manual_entry.subtitle')}
           </p>
         </div>
       </div>
@@ -59,7 +61,7 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
       <form onSubmit={handleManualSubmit} className="space-y-4">
         <div className="relative">
           <input
-            placeholder="e.g. E-289, W-414"
+            placeholder={t('manual_entry.placeholder')}
             value={projectId}
             onChange={(e) => {
               const rawValue = e.target.value;
@@ -87,7 +89,7 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
             />
           ) : (
             <span className="flex items-center gap-2">
-              Find Project <ArrowRight size={18} />
+              {t('manual_entry.btn_find')} <ArrowRight size={18} />
             </span>
           )}
         </button>
@@ -109,7 +111,7 @@ export default function ManualProjectEntry({ previewId: externalPreviewId, onPre
       </form>
 
       <div className="mt-5 pt-5 border-t-2 border-dashed border-slate-100 dark:border-slate-800">
-        <p className="cr-section-title mb-2">Try these IDs:</p>
+        <p className="cr-section-title mb-2">{t('manual_entry.try_ids')}</p>
         <div className="flex flex-wrap gap-2">
           {["E-289", "W-414"].map((id) => (
             <button

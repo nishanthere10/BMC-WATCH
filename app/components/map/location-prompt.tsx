@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { MapPin, Locate, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/app/components/I18nProvider";
 
 const RADIUS_OPTIONS = [5, 10, 20] as const;
 
@@ -25,12 +26,13 @@ export default function LocationPrompt({
   showAll,
   nearbyCount,
 }: LocationPromptProps) {
+  const { t } = useTranslations();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const requestLocation = () => {
     if (!navigator.geolocation) {
-      setError("Geolocation is not supported by your browser.");
+      setError(t('location_prompt.err_not_supported'));
       return;
     }
 
@@ -45,8 +47,8 @@ export default function LocationPrompt({
       (err) => {
         setError(
           err.code === 1
-            ? "Location access denied. Please enable location in browser settings."
-            : "Unable to determine your location. Try again."
+            ? t('location_prompt.err_denied')
+            : t('location_prompt.err_unable')
         );
         setLoading(false);
       },
@@ -66,8 +68,8 @@ export default function LocationPrompt({
             {userLocation ? (
               <>
                 <p className="text-sm font-bold text-slate-800 dark:text-white">
-                  Showing {showAll ? "all" : nearbyCount} projects
-                  {!showAll && <span className="text-slate-500 font-medium"> within {radius} km</span>}
+                  {t('location_prompt.showing')} {showAll ? t('location_prompt.all') : nearbyCount} {t('location_prompt.projects')}
+                  {!showAll && <span className="text-slate-500 font-medium"> {t('location_prompt.within')} {radius} {t('location_prompt.km')}</span>}
                 </p>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-0.5">
                   {userLocation.lat.toFixed(4)}°N, {userLocation.lon.toFixed(4)}°E
@@ -76,10 +78,10 @@ export default function LocationPrompt({
             ) : (
               <>
                 <p className="text-sm font-bold text-slate-800 dark:text-white">
-                  Share your location
+                  {t('location_prompt.share_title')}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  See only nearby road works on the map
+                  {t('location_prompt.share_subtitle')}
                 </p>
               </>
             )}
@@ -94,7 +96,7 @@ export default function LocationPrompt({
             className="cr-btn-primary text-sm shrink-0"
           >
             <Locate size={15} className={loading ? "animate-spin" : ""} />
-            {loading ? "Locating…" : "Share Location"}
+            {loading ? t('location_prompt.locating') : t('location_prompt.share_btn')}
           </button>
         ) : (
           <div className="flex items-center gap-1.5 flex-wrap">
@@ -109,7 +111,7 @@ export default function LocationPrompt({
                     : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#0055A4] dark:hover:border-[#38BDF8]"
                 )}
               >
-                {km} km
+                {km} {t('location_prompt.km')}
               </button>
             ))}
             <button
@@ -121,7 +123,7 @@ export default function LocationPrompt({
                   : "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-[#0055A4] dark:hover:border-[#38BDF8]"
               )}
             >
-              All
+              {t('location_prompt.all_btn')}
             </button>
           </div>
         )}

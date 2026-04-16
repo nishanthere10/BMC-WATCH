@@ -5,6 +5,7 @@ import "leaflet/dist/leaflet.css";
 import Navbar from "@/app/components/Navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
+import { I18nProvider } from "./components/I18nProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -39,9 +40,6 @@ export default function RootLayout({
       className={`${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        <link rel="stylesheet" href="/css/ux4g.css" />
-      </head>
       <body className="min-h-full flex flex-col font-sans bg-white dark:bg-[#0A0F1E] text-slate-800 dark:text-slate-100 transition-colors duration-300">
         <ThemeProvider
           attribute="class"
@@ -49,9 +47,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          {children}
-          <Toaster richColors position="top-center" />
+          <I18nProvider>
+            <Navbar />
+            {children}
+            <Toaster richColors position="top-center" />
+          </I18nProvider>
         </ThemeProvider>
       </body>
     </html>

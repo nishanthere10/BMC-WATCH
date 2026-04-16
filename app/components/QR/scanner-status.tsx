@@ -3,12 +3,15 @@
 import { motion } from "framer-motion";
 import { CheckCircle2, Loader2, ScanLine } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/app/components/I18nProvider";
 
 interface ScannerStatusProps {
   status: "idle" | "scanning" | "success" | "error";
 }
 
 export default function ScannerStatus({ status }: ScannerStatusProps) {
+  const { t } = useTranslations();
+  
   return (
     <div className="flex items-center justify-center gap-3 py-4 px-6 rounded-full bg-slate-100 border border-slate-200">
       <div className="relative">
@@ -33,10 +36,10 @@ export default function ScannerStatus({ status }: ScannerStatusProps) {
         status === "scanning" ? "text-primary" : "text-slate-500",
         status === "success" && "text-emerald-600"
       )}>
-        {status === "idle" && "Ready to Scan"}
-        {status === "scanning" && "Scanning for QR Code..."}
-        {status === "success" && "Project Identified!"}
-        {status === "error" && "Invalid Code"}
+        {status === "idle" && t('scanner_status.idle')}
+        {status === "scanning" && t('scanner_status.scanning')}
+        {status === "success" && t('scanner_status.success')}
+        {status === "error" && t('scanner_status.error')}
       </span>
     </div>
   );

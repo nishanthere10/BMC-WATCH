@@ -7,21 +7,23 @@ import { Map, Menu, X, BarChart2, ScanLine, Trophy, UserCircle, LogOut, Award, C
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "@/app/components/ThemeToggle";
+import { LanguageToggle } from "@/app/components/LanguageToggle";
 import { useAuth } from "@/app/hooks/use-auth";
+import { useTranslations } from "@/app/components/I18nProvider";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
 const NAV_ITEMS = [
-  { name: "Nearby Works", href: "/nearby", icon: Map },
-  { name: "Leaderboard", href: "/leaderboard", icon: Trophy },
-  { name: "Civic Audit", href: "/view-dashboard", icon: BarChart2, live: true },
+  { name: "Nearby Works", key: "nearby", href: "/nearby", icon: Map },
+  { name: "Leaderboard", key: "leaderboard", href: "/leaderboard", icon: Trophy },
+  { name: "Civic Audit", key: "dashboard", href: "/view-dashboard", icon: BarChart2, live: true },
 ];
 
 const USER_MENU_ITEMS = [
-  { href: "/profile", label: "My Profile", icon: UserCircle, iconClass: "text-slate-400" },
-  { href: "/my-reports", label: "My Reports", icon: FolderOpen, iconClass: "text-[#38BDF8]" },
-  { href: "/leaderboard", label: "Leaderboard", icon: Award, iconClass: "text-[#F47920]" },
+  { href: "/profile", key: "profile", label: "My Profile", icon: UserCircle, iconClass: "text-slate-400" },
+  { href: "/my-reports", key: "reports", label: "My Reports", icon: FolderOpen, iconClass: "text-[#38BDF8]" },
+  { href: "/leaderboard", key: "leaderboard", label: "Leaderboard", icon: Award, iconClass: "text-[#F47920]" },
 ];
 
 // ── Animation Variants ───────────────────────────────────────────────────────
@@ -57,6 +59,7 @@ export default function Navbar() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { user, loading, logout } = useAuth();
+  const { t } = useTranslations();
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -115,7 +118,7 @@ export default function Navbar() {
                   </AnimatePresence>
                   <span className="relative z-10 flex items-center gap-2">
                     <item.icon size={15} />
-                    {item.name}
+                    {t(`nav.${item.key}`)}
                   </span>
                   {item.live && (
                     <span className="relative z-10 flex h-1.5 w-1.5 ml-0.5">
@@ -131,8 +134,9 @@ export default function Navbar() {
           {/* Desktop Right */}
           <div className="hidden md:flex gap-2 items-center shrink-0">
             <Link href="/scan" className="cr-btn cr-btn-secondary text-[13px]">
-              <ScanLine size={14} />Scan
+              <ScanLine size={14} />{t('nav.scan')}
             </Link>
+            <LanguageToggle />
             <ThemeToggle />
 
             {loading ? (
@@ -160,14 +164,14 @@ export default function Navbar() {
                         <motion.div key={item.href} variants={stagger(i)} initial="hidden" animate="visible">
                           <Link href={item.href} onClick={() => setProfileOpen(false)} className={MENU_ITEM}>
                             <item.icon size={16} className={item.iconClass} />
-                            {item.label}
+                            {t(`nav.${item.key}`)}
                           </Link>
                         </motion.div>
                       ))}
                       <div className="h-px mx-4 bg-slate-100 dark:bg-slate-800 my-1" />
                       <motion.div variants={stagger(USER_MENU_ITEMS.length)} initial="hidden" animate="visible">
                         <button onClick={() => { logout(); setProfileOpen(false); }} className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-[#B91C1C] hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors">
-                          <LogOut size={16} />Sign Out
+                          <LogOut size={16} />{t('nav.logout')}
                         </button>
                       </motion.div>
                     </motion.div>
@@ -176,14 +180,13 @@ export default function Navbar() {
               </div>
             ) : (
               <Link href="/login" className="cr-btn cr-btn-primary text-[13px]">
-                <UserCircle size={14} />Login
+                <UserCircle size={14} />{t('nav.login')}
               </Link>
             )}
           </div>
 
           {/* Mobile Toggle */}
           <div className="flex items-center gap-2 md:hidden">
-            <ThemeToggle />
             <button
               onClick={() => setIsOpen((o) => !o)}
               className="p-2 bg-white dark:bg-[#0D1424] border-2 border-slate-200 dark:border-slate-700 rounded-xl transition-colors duration-150 shadow-[2px_2px_0_0_rgba(0,0,0,0.04)]"
@@ -222,7 +225,7 @@ export default function Navbar() {
                         )}
                       >
                         <item.icon size={17} />
-                        <span className="flex-1">{item.name}</span>
+                        <span className="flex-1">{t(`nav.${item.key}`)}</span>
                         {item.live && (
                           <span className="relative flex h-2 w-2">
                             <span className="animate-ping absolute inset-0 rounded-full bg-[#1A7A3E] opacity-75" />
@@ -233,6 +236,13 @@ export default function Navbar() {
                     </motion.div>
                   );
                 })}
+
+                <div className="h-px bg-slate-100 dark:bg-slate-800 my-1" />
+                
+                <div className="flex items-center justify-center gap-3 py-2">
+                  <LanguageToggle />
+                  <ThemeToggle />
+                </div>
 
                 <div className="h-px bg-slate-100 dark:bg-slate-800 my-1" />
 
@@ -246,7 +256,7 @@ export default function Navbar() {
                           className={cn("flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-slate-100 dark:border-slate-800 text-[14px] font-bold transition-colors duration-150", TEXT, "hover:bg-slate-50 dark:hover:bg-slate-800/50")}
                         >
                           <item.icon size={17} className={item.iconClass} />
-                          {item.label}
+                          {t(`nav.${item.key}`)}
                         </Link>
                       </motion.div>
                     ))}
@@ -255,19 +265,19 @@ export default function Navbar() {
                         onClick={() => { logout(); setIsOpen(false); }}
                         className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border-2 border-red-100 dark:border-red-900/30 text-[14px] font-bold text-[#B91C1C] hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors"
                       >
-                        <LogOut size={17} />Sign Out
+                        <LogOut size={17} />{t('nav.logout')}
                       </button>
                     </motion.div>
                     <motion.div variants={stagger(NAV_ITEMS.length + USER_MENU_ITEMS.length + 2)} initial="hidden" animate="visible">
                       <Link href="/scan" onClick={() => setIsOpen(false)} className="cr-btn cr-btn-accent w-full mt-1">
-                        <ScanLine size={16} />Scan QR Code
+                        <ScanLine size={16} />{t('nav.scan')}
                       </Link>
                     </motion.div>
                   </>
                 ) : (
                   <motion.div variants={stagger(NAV_ITEMS.length + 1)} initial="hidden" animate="visible">
                     <Link href="/login" onClick={() => setIsOpen(false)} className="cr-btn cr-btn-primary w-full">
-                      <UserCircle size={16} />Login to Participate
+                      <UserCircle size={16} />{t('nav.login')}
                     </Link>
                   </motion.div>
                 )}

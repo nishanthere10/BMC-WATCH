@@ -10,8 +10,10 @@ import ScannerStatus from "@/components/QR/scanner-status";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getProjectById } from "@/lib/projects";
 import type { Project } from "@/types/project";
+import { useTranslations } from "@/app/components/I18nProvider";
 
 export default function ScanPage() {
+  const { t } = useTranslations();
   const [status, setStatus] = useState<"idle" | "scanning" | "success" | "error">("idle");
   const [previewId, setPreviewId] = useState<string>("");
   const [previewProject, setPreviewProject] = useState<Project | null>(null);
@@ -45,7 +47,7 @@ export default function ScanPage() {
   };
 
   return (
-    <div className="min-h-screen transition-colors duration-300">
+    <div className="min-h-screen bg-white dark:bg-[#070D1A] transition-colors duration-300">
       <main className="pb-20 pt-24">
 
         {/* Page Header */}
@@ -57,13 +59,13 @@ export default function ScanPage() {
             className="space-y-3"
           >
             <div className="cr-badge cr-badge-progress">
-              <QrCode size={13} /> Scanner Mode
+              <QrCode size={13} /> {t('scan.mode')}
             </div>
             <h1 className="cr-page-title">
-              Identify a Project
+              {t('scan.title')}
             </h1>
             <p className="cr-page-subtitle">
-              Scan the QR code on any BMC work site board to see budget, timeline, and contractor details.
+              {t('scan.subtitle')}
             </p>
           </motion.div>
         </div>
@@ -85,13 +87,13 @@ export default function ScanPage() {
                         value="camera"
                         className="flex items-center gap-2 font-bold text-sm rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700 data-[state=active]:text-[#2563EB] dark:data-[state=active]:text-[#38BDF8] data-[state=active]:shadow-sm"
                       >
-                        <Scan size={16} /> Camera
+                        <Scan size={16} /> {t('scan.camera')}
                       </TabsTrigger>
                       <TabsTrigger
                         value="manual"
                         className="flex items-center gap-2 font-bold text-sm rounded-lg data-[state=active]:bg-white dark:data-[state=active]:bg-slate-700 data-[state=active]:text-[#2563EB] dark:data-[state=active]:text-[#38BDF8] data-[state=active]:shadow-sm"
                       >
-                        <Keyboard size={16} /> Manual ID
+                        <Keyboard size={16} /> {t('scan.manual')}
                       </TabsTrigger>
                     </TabsList>
                   </div>
@@ -154,13 +156,13 @@ export default function ScanPage() {
                 >
                   <div className="cr-card-flat flex justify-between items-center px-4 py-3">
                     <span className="cr-section-title flex items-center gap-2">
-                      <QrCode size={13} /> Scanned Result
+                      <QrCode size={13} /> {t('scan.result')}
                     </span>
                     <button
                       onClick={() => setPreviewId("")}
                       className="cr-btn-danger text-xs py-1 px-3"
                     >
-                      Close
+                      {t('scan.close')}
                     </button>
                   </div>
                   <ProjectCard project={previewProject} />

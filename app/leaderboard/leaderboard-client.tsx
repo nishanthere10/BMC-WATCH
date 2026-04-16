@@ -2,6 +2,7 @@
 
 import { LazyMotion, m } from "framer-motion";
 import { Trophy, Medal, Award, UserCircle } from "lucide-react";
+import { useTranslations } from "@/app/components/I18nProvider";
 
 interface LeaderboardUser {
   id: string;
@@ -14,21 +15,22 @@ interface LeaderboardUser {
 const loadFeatures = () => import('@/components/home/features').then(res => res.default);
 
 export default function LeaderboardClient({ users }: { users: LeaderboardUser[] }) {
+  const { t } = useTranslations();
   const topThree = users.slice(0, 3);
   const rest = users.slice(3);
 
   return (
     <LazyMotion features={loadFeatures} strict>
-      <div className="min-h-screen px-4 py-24 pb-32">
+      <div className="min-h-screen bg-white dark:bg-[#070D1A] px-4 py-24 pb-32 transition-colors duration-300">
         <div className="mx-auto max-w-3xl">
           
           <div className="text-center mb-12">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-amber-50 dark:bg-amber-900/20 shadow-lg border border-amber-100 dark:border-amber-900/50 mb-4">
               <Trophy size={32} className="text-amber-500" />
             </div>
-            <h1 className="cr-page-title">Civic Leaderboard</h1>
+            <h1 className="cr-page-title">{t('leaderboard.title')}</h1>
             <p className="cr-page-subtitle mt-3">
-              Recognizing the top citizens auditing Mumbai&apos;s road infrastructure.
+              {t('leaderboard.subtitle')}
             </p>
           </div>
 
@@ -93,9 +95,9 @@ export default function LeaderboardClient({ users }: { users: LeaderboardUser[] 
           {rest.length > 0 && (
             <div className="cr-card pt-2">
               <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800/50 bg-slate-50/50 dark:bg-slate-800/20 flex cr-section-title">
-                <span className="w-12 text-center">Rank</span>
-                <span className="flex-1">Citizen</span>
-                <span className="text-right">Points</span>
+                <span className="w-12 text-center">{t('leaderboard.rank')}</span>
+                <span className="flex-1">{t('leaderboard.citizen')}</span>
+                <span className="text-right">{t('leaderboard.points')}</span>
               </div>
               <div className="divide-y divide-slate-100 dark:divide-slate-800/50">
                 {rest.map((user, index) => (

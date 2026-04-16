@@ -4,6 +4,7 @@ import { MapPin, HardHat, CircleDollarSign, ArrowRight } from "lucide-react";
 import type { Project } from "@/types/project";
 import { getProjectImage } from "@/types/project";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/app/components/I18nProvider";
 
 const statusStyles: Record<string, string> = {
   "In Progress": "cr-badge-progress",
@@ -20,6 +21,7 @@ const progressColors: Record<string, string> = {
 };
 
 export default function ProjectCard({ project }: { project: Project }) {
+  const { t } = useTranslations();
   const progress = project.progress_percent ?? 0;
   const status = project.status || "Planned";
   const imageSrc = getProjectImage(project.type);
@@ -51,7 +53,7 @@ export default function ProjectCard({ project }: { project: Project }) {
         </div>
         {/* Ward */}
         <p className="absolute bottom-3 left-3 text-white text-xs font-semibold flex items-center gap-1">
-          <MapPin size={12} /> {project.ward || "N/A"} Ward
+          <MapPin size={12} /> {project.ward || t('project_card.na')} {t('project_card.ward')}
         </p>
       </div>
 
@@ -59,15 +61,15 @@ export default function ProjectCard({ project }: { project: Project }) {
       <div className="p-5 space-y-4">
         <div>
           <h3 className="font-heading font-bold text-lg leading-snug text-[#0F172A] dark:text-white group-hover:text-[#2563EB] dark:group-hover:text-[#38BDF8] transition-colors">
-            {project.title || "Untitled Project"}
+            {project.title || t('project_card.untitled')}
           </h3>
-          <p className="text-[#64748B] dark:text-slate-400 text-sm line-clamp-1 mt-1">{project.location || "Location not specified"}</p>
+          <p className="text-[#64748B] dark:text-slate-400 text-sm line-clamp-1 mt-1">{project.location || t('project_card.no_loc')}</p>
         </div>
 
         {/* Progress */}
         <div className="space-y-1.5">
           <div className="flex justify-between text-xs font-semibold text-[#64748B] dark:text-slate-400">
-            <span>Completion</span>
+            <span>{t('project_card.completion')}</span>
             <span className="text-[#0F172A] dark:text-white font-bold font-mono">{progress}%</span>
           </div>
           <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
@@ -81,17 +83,17 @@ export default function ProjectCard({ project }: { project: Project }) {
         {/* Stats */}
         <div className="grid grid-cols-2 gap-3 py-3 border-t border-slate-100 dark:border-slate-800/60">
           <div className="space-y-0.5">
-            <p className="text-[10px] uppercase tracking-widest text-[#64748B] dark:text-slate-500 font-bold">Budget</p>
+            <p className="text-[10px] uppercase tracking-widest text-[#64748B] dark:text-slate-500 font-bold">{t('project_card.budget')}</p>
             <p className="text-sm font-bold font-mono text-[#0F172A] dark:text-white flex items-center gap-1.5">
               <CircleDollarSign size={14} className="text-[#2563EB] dark:text-[#38BDF8]" />
-              ₹{budgetCr} Cr
+              ₹{budgetCr} {t('project_card.cr')}
             </p>
           </div>
           <div className="space-y-0.5">
-            <p className="text-[10px] uppercase tracking-widest text-[#64748B] dark:text-slate-500 font-bold">Contractor</p>
+            <p className="text-[10px] uppercase tracking-widest text-[#64748B] dark:text-slate-500 font-bold">{t('project_card.contractor')}</p>
             <p className="text-sm font-bold text-[#0F172A] dark:text-white flex items-center gap-1.5 truncate">
               <HardHat size={14} className="text-[#2563EB] dark:text-[#38BDF8] shrink-0" />
-              <span className="truncate">{project.contractor ? project.contractor.split(" ").slice(0, 2).join(" ") : "N/A"}</span>
+              <span className="truncate">{project.contractor ? project.contractor.split(" ").slice(0, 2).join(" ") : t('project_card.na')}</span>
             </p>
           </div>
         </div>
@@ -100,7 +102,7 @@ export default function ProjectCard({ project }: { project: Project }) {
           href={`/projects/${project.id}`}
           className="cr-btn-primary w-full group/btn mt-3"
         >
-          View Full Transparency
+          {t('project_card.view')}
           <ArrowRight size={15} className="transition-transform group-hover/btn:translate-x-1" />
         </Link>
       </div>
