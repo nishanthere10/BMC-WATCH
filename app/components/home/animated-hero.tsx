@@ -46,9 +46,9 @@ function ImageCarousel() {
   };
 
   return (
-    <div className="relative w-full rounded-2xl overflow-hidden border-2 border-slate-200 dark:border-slate-700 shadow-[8px_8px_0px_0px_rgba(0,85,164,0.10)] dark:shadow-[8px_8px_0px_0px_rgba(56,189,248,0.06)] bg-white dark:bg-[#0D1424]">
+    <div className="relative w-full rounded-3xl overflow-hidden border border-slate-200/60 dark:border-slate-700/60 shadow-2xl shadow-[#0055A4]/10 dark:shadow-[#38BDF8]/5 bg-white/80 dark:bg-[#0D1424]/80 backdrop-blur-sm">
       {/* Image area */}
-      <div className="relative w-full aspect-[4/3] overflow-hidden bg-slate-100 dark:bg-slate-900">
+      <div className="relative w-full aspect-[4/3] overflow-hidden bg-slate-100 dark:bg-slate-900 rounded-t-3xl">
         <AnimatePresence custom={direction} mode="popLayout">
           <motion.div
             key={current}
@@ -168,26 +168,28 @@ export default function AnimatedHero() {
               style={{ fontSize: "clamp(2.4rem, 5vw, 4.2rem)", lineHeight: 1.05, letterSpacing: "-0.04em" }}
             >
               Rate Mumbai&apos;s{" "}
-              <span className="text-[#0055A4] dark:text-[#38BDF8]">Road Works</span>.
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0055A4] to-[#F47920] dark:from-[#38BDF8] dark:to-[#F47920]">
+                Road Works
+              </span>.
               <br />
               Hold the system accountable.
             </motion.h1>
 
             <motion.p
               variants={fadeUp}
-              className="text-slate-500 dark:text-slate-400 font-medium text-lg mb-8 leading-relaxed max-w-lg"
+              className="text-slate-600 dark:text-slate-300 font-medium text-lg mb-8 leading-relaxed max-w-lg"
             >
               Scan the QR code at any BMC road construction site, verify real project data, and file AI-graded ratings. Earn civic points. Drive accountability.
             </motion.p>
 
             {/* CTA buttons */}
-            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3">
-              <Link href="/scan" className="cr-btn-primary h-14 px-8 text-base group shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)]">
+            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4">
+              <Link href="/scan" className="cr-btn-primary h-14 px-8 text-base group shadow-[0_4px_14px_0_rgba(0,85,164,0.39)] hover:shadow-[0_6px_20px_rgba(0,85,164,0.23)] hover:-translate-y-1 transition-all duration-200">
                 <ScanLine size={18} />
                 Start Scanning
                 <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
               </Link>
-              <Link href="/nearby" className="cr-btn-secondary h-14 px-8 text-base group bg-white dark:bg-slate-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.05)]">
+              <Link href="/nearby" className="cr-btn-secondary h-14 px-8 text-base group bg-white dark:bg-slate-900 shadow-[0_4px_14px_0_rgba(0,0,0,0.05)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-200">
                 <MapPin size={18} />
                 Explore Ward Map
               </Link>
