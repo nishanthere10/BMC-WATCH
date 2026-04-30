@@ -58,37 +58,41 @@ export default function HowItWorks() {
         </div>
 
         {/* Steps grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6 mt-8">
+          {/* Connecting line for larger screens */}
+          <div className="hidden lg:block absolute top-[4.5rem] left-[10%] right-[10%] h-[2px] bg-gradient-to-r from-slate-200 via-[#0055A4]/30 to-[#F47920]/30 dark:from-slate-800 dark:via-[#38BDF8]/30 dark:to-[#F47920]/30 z-0" />
+
           {steps.map((step, idx) => (
             <div
               key={idx}
-              className="relative bg-white dark:bg-[#0D1424] border-2 border-slate-200 dark:border-slate-700 rounded-2xl p-6 
-                         hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,85,164,0.12)] dark:hover:shadow-[6px_6px_0px_0px_rgba(56,189,248,0.08)]
-                         transition-all duration-200 group"
+              className="relative z-10 bg-white/60 dark:bg-[#0D1424]/60 backdrop-blur-md border border-slate-200/80 dark:border-slate-700/80 rounded-3xl p-8
+                         hover:-translate-y-2 hover:shadow-[0_8px_30px_rgba(0,85,164,0.12)] dark:hover:shadow-[0_8px_30px_rgba(56,189,248,0.08)]
+                         transition-all duration-300 group flex flex-col items-center text-center"
             >
-              {/* Step number — big, offset */}
-              <div className="absolute -top-4 -right-2 font-heading font-extrabold text-6xl leading-none select-none pointer-events-none"
-                style={{ color: step.color, opacity: 0.08, letterSpacing: "-0.05em" }}>
+              {/* Step number — big, offset background */}
+              <div className="absolute top-4 right-4 font-heading font-extrabold text-7xl leading-none select-none pointer-events-none transition-all duration-300 group-hover:scale-110"
+                style={{ color: step.color, opacity: 0.04, letterSpacing: "-0.05em" }}>
                 {step.num}
               </div>
 
               {/* Icon block */}
-              <div className="w-12 h-12 rounded-xl border-2 border-slate-200 dark:border-slate-700 flex items-center justify-center mb-5 transition-all duration-200 group-hover:border-current" style={{ color: step.color, backgroundColor: `${step.color}12` }}>
-                <step.icon size={24} />
+              <div className="relative w-16 h-16 rounded-2xl border border-slate-200 dark:border-slate-700 flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg shadow-sm" style={{ color: step.color, backgroundColor: `${step.color}15` }}>
+                <step.icon size={28} className="relative z-10" />
+                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-md" style={{ backgroundColor: step.color }} />
               </div>
 
               {/* Monospace step num */}
-              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] mb-2 block" style={{ color: step.color }}>
+              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] mb-3 block" style={{ color: step.color }}>
                 Step {step.num}
               </span>
 
               <div
-                className="font-extrabold text-slate-900 dark:text-white mb-2"
-                style={{ fontSize: 17, letterSpacing: "-0.02em" }}
+                className="font-extrabold text-slate-900 dark:text-white mb-3"
+                style={{ fontSize: 19, letterSpacing: "-0.02em" }}
               >
                 {step.title}
               </div>
-              <p className="text-sm text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+              <p className="text-[15px] text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
                 {step.description}
               </p>
             </div>
