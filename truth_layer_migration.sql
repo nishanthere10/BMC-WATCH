@@ -16,10 +16,15 @@ CREATE TABLE IF NOT EXISTS public.project_state (
 -- Index for fast map/dashboard lookups
 CREATE INDEX IF NOT EXISTS idx_project_state_status ON public.project_state(current_status);
 
+-- 1.5️⃣ PHASE 1b: CREATE INDEX FOR AGGREGATION PERFORMANCE
+-- Ensures that the trigger aggregates instantly even with millions of rows
+CREATE INDEX IF NOT EXISTS idx_project_ratings_project_status ON public.project_ratings(project_id, status);
+
 -- 2️⃣ PHASE 2: THE AUTOMATIC STATE ENGINE (TRIGGER FUNCTION)
 CREATE OR REPLACE FUNCTION public.update_project_state()
 RETURNS TRIGGER AS $$
 DECLARE
+    v_project_id UUID;
     v_count INT;
     v_avg FLOAT;
     v_variance FLOAT;
@@ -27,6 +32,13 @@ DECLARE
     v_confidence FLOAT;
     v_conflicting BOOLEAN;
 BEGIN
+    -- Handle DELETE operations where NEW is null
+    IF TG_OP = 'DELETE' THEN
+        v_project_id := OLD.project_id;
+    ELSE
+        v_project_id := NEW.project_id;
+    END IF;
+
     -- 1. Calculate Aggregates natively in Postgres (Lightning Fast)
     -- We use COALESCE to handle nulls if a project has no ratings left
     SELECT 
@@ -38,7 +50,7 @@ BEGIN
         v_avg, 
         v_variance
     FROM public.project_ratings 
-    WHERE project_id = NEW.project_id AND status = 'Verified';
+    WHERE project_id = v_project_id AND status = 'Verified';
 
     -- 2. Derive Status based on average
     IF v_avg >= 4.0 THEN
@@ -62,7 +74,7 @@ BEGIN
 
     -- 5. Upsert into project_state
     INSERT INTO public.project_state (project_id, current_status, confidence_score, report_count, is_conflicting, last_updated)
-    VALUES (NEW.project_id, v_status, v_confidence, v_count, v_conflicting, NOW())
+    VALUES (v_project_id, v_status, v_confidence, v_count, v_conflicting, NOW())
     ON CONFLICT (project_id) DO UPDATE 
     SET 
         current_status = EXCLUDED.current_status,
@@ -71,7 +83,7 @@ BEGIN
         is_conflicting = EXCLUDED.is_conflicting,
         last_updated = EXCLUDED.last_updated;
 
-    RETURN NEW;
+    RETURN COALESCE(NEW, OLD);
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -99,4 +111,10 @@ SELECT
 FROM public.project_ratings
 WHERE status = 'Verified'
 GROUP BY project_id
-ON CONFLICT (project_id) DO NOTHING;
+ON CONFLICT (project_id) DO UPDATE 
+SET 
+    current_status = EXCLUDED.current_status,
+    confidence_score = EXCLUDED.confidence_score,
+    report_count = EXCLUDED.report_count,
+    is_conflicting = EXCLUDED.is_conflicting,
+    last_updated = EXCLUDED.last_updated;

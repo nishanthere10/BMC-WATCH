@@ -5,6 +5,7 @@ import type { Project } from "@/types/project";
 import { getProjectImage } from "@/types/project";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "@/app/components/I18nProvider";
+import { motion } from "framer-motion";
 
 const statusStyles: Record<string, string> = {
   "In Progress": "cr-badge-progress",
@@ -31,8 +32,11 @@ export default function ProjectCard({ project }: { project: Project }) {
     : "0";
 
   return (
-    <div
-      className="cr-card group transition-transform duration-300 hover:-translate-y-1.5 animate-in fade-in fill-mode-both duration-500"
+    <motion.div
+      whileHover={{ y: -4, transition: { duration: 0.15, ease: "easeOut" } }}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="cr-card group flex flex-col"
     >
       {/* Image Header */}
       <div className="relative h-48 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
@@ -106,6 +110,6 @@ export default function ProjectCard({ project }: { project: Project }) {
           <ArrowRight size={15} className="transition-transform group-hover/btn:translate-x-1" />
         </Link>
       </div>
-    </div>
+    </motion.div>
   );
 }

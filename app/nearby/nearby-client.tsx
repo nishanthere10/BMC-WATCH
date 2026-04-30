@@ -9,6 +9,7 @@ import LocationPrompt from "@/components/map/location-prompt";
 import ProjectFilters from "@/app/projects/project-filters";
 import ProjectCard from "@/app/projects/project-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { motion, AnimatePresence } from "framer-motion";
 import { getProjects, type PaginatedProjects } from "@/lib/projects";
 import { filterByRadius } from "@/lib/geo-utils";
 import type { MapProject } from "@/types/project";
@@ -113,8 +114,11 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
       <main className="pb-20 pt-24">
         {/* Page Header */}
         <div className="container px-4 md:px-8 mb-8">
-          <div
-            className="flex flex-col md:flex-row md:items-end justify-between gap-6 animate-in fade-in slide-in-from-bottom-2 duration-500"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="flex flex-col md:flex-row md:items-end justify-between gap-6"
           >
             <div className="space-y-2">
               <div className="cr-badge cr-badge-progress uppercase tracking-widest backdrop-blur-sm">
@@ -129,8 +133,11 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
             </div>
 
             {/* Quick Stats */}
-            <div
-              className="flex gap-3 shrink-0 animate-in fade-in zoom-in-95 duration-500 delay-100 fill-mode-both"
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="flex gap-3 shrink-0"
             >
               <div className="cr-card px-6 py-4 text-center">
                 <p className="cr-section-title mb-1">
@@ -140,8 +147,8 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
                   {userLocation && !showAll ? filteredMapProjects.length : data.total}
                 </p>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
 
         <div className="container px-4 md:px-8">
@@ -186,14 +193,16 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
             </div>
 
             <TabsContent value="map" className="mt-0">
-              <div
-                className="cr-card bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] bg-[size:12px_12px] animate-in fade-in zoom-in-95 duration-400"
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="cr-card bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#334155_1px,transparent_1px),linear-gradient(to_bottom,#334155_1px,transparent_1px)] bg-[size:12px_12px]"
               >
                 <ProjectMap
                   projects={filteredMapProjects as MapProject[]}
                   userLocation={userLocation ?? undefined}
                 />
-              </div>
+              </motion.div>
             </TabsContent>
 
             <TabsContent value="grid" className="mt-0">
@@ -232,17 +241,19 @@ export default function NearbyClient({ initialData, mapProjects, filterOptions }
                     )}
                   </>
                 ) : (
-                  <div
-                    className="flex flex-col items-center justify-center py-24 text-center space-y-4 animate-in fade-in slide-in-from-top-2"
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex flex-col items-center justify-center py-24 text-center space-y-4"
                   >
-                    <div className="w-20 h-20 rounded-3xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/60 dark:border-slate-700/50 shadow-lg flex items-center justify-center">
+                    <div className="w-20 h-20 rounded-3xl cr-glass shadow-[4px_4px_0_0_rgba(0,0,0,0.1)] flex items-center justify-center">
                       <Search size={36} className="text-[#64748B] dark:text-slate-500" />
                     </div>
                     <div>
                       <h3 className="text-xl font-bold text-[#0F172A] dark:text-white">{t('nearby.empty_title')}</h3>
                       <p className="text-[#64748B] dark:text-slate-400 mt-1 font-medium">{t('nearby.empty_desc')}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 )}
               </div>
             </TabsContent>

@@ -8,6 +8,7 @@ import DashboardFilters from "@/components/dashboard/dashboard-filters";
 import type { WardPerformance } from "@/types/dashboard";
 import { MessageSquare } from "lucide-react";
 import { useTranslations } from "@/app/components/I18nProvider";
+import { motion } from "framer-motion";
 
 interface DashboardClientProps {
   data: {
@@ -64,14 +65,24 @@ export default function DashboardClient({ data }: DashboardClientProps) {
 
           <DashboardFilters />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, staggerChildren: 0.1 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+          >
             <StatCard title={t('dashboard.total_works')} value={data.wardStats.reduce((a: number, b: WardPerformance) => a + b.total_projects, 0)} icon={"HardHat"} />
             <StatCard title={t('dashboard.active_reports')} value={data.wardStats.reduce((a: number, b: WardPerformance) => a + b.citizen_reports, 0)} icon={"Users"} />
             <StatCard title={t('dashboard.delay_rate')} value="24%" trend={t('dashboard.trend_attention')} variant="destructive" icon={"Clock"} />
             <StatCard title={t('dashboard.most_active_ward')} value={data.wardStats[0]?.ward || t('dashboard.data_unavail')} description={`${data.wardStats[0]?.citizen_reports || 0} active reports`} icon={"MapPin"} />
-          </div>
+          </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-6"
+          >
             <div className={`${glassPanel} p-4 lg:col-span-8 h-[450px]`}>
               <div className="flex items-center justify-between mb-4 px-2">
                 <div>
@@ -90,7 +101,7 @@ export default function DashboardClient({ data }: DashboardClientProps) {
 
             <div className={`${glassPanel} p-6 lg:col-span-4 h-[450px] flex flex-col`}>
               <h3 className={`${sectionTitle} flex items-center gap-2 mb-5`}>
-                <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-[#2563EB] to-[#38BDF8] flex items-center justify-center shadow-sm">
+                <div className="w-7 h-7 rounded-xl bg-gradient-to-br from-[#2563EB] to-[#38BDF8] flex items-center justify-center shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)] border border-blue-500/50">
                   <MessageSquare size={14} className="text-white" />
                 </div>
                 {t('dashboard.recent_audits')}
@@ -99,10 +110,15 @@ export default function DashboardClient({ data }: DashboardClientProps) {
                 <RecentReportsFeed reports={data.recentReports} />
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Ward Leaderboard */}
-          <div className={`${glassPanel} p-6 overflow-hidden`}>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className={`${glassPanel} p-6 overflow-hidden`}
+          >
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className={sectionTitle}>{t('dashboard.leaderboard')}</h3>
@@ -113,7 +129,7 @@ export default function DashboardClient({ data }: DashboardClientProps) {
               </span>
             </div>
             <WardRankingTable data={data.wardStats} />
-          </div>
+          </motion.div>
 
         </div>
       </main>
