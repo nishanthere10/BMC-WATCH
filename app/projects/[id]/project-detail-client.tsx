@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/dialog";
 import type { Project } from "@/types/project";
 
-export default function ProjectDetailClient({ project }: { project: Project }) {
+export default function ProjectDetailClient({ project, projectState }: { project: Project, projectState?: any }) {
   const [isRatingOpen, setIsRatingOpen] = useState(false);
   const [submittedRating, setSubmittedRating] = useState<{ rating: number; points: number } | null>(null);
   const [feedKey, setFeedKey] = useState(0);
@@ -89,6 +89,45 @@ export default function ProjectDetailClient({ project }: { project: Project }) {
                 </div>
 
                 <ProjectDetailsHeader project={project} />
+
+                {/* --- SYSTEM TRUTH LAYER --- */}
+                {projectState && (
+                  <div className="mt-8 mb-2 border-4 border-slate-900 dark:border-white p-4 relative bg-slate-50 dark:bg-[#0D1424] shadow-[8px_8px_0px_0px_rgba(0,0,0,0.15)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,0.1)]">
+                    <div className="absolute -top-3 left-4 bg-white dark:bg-slate-900 px-2 text-[10px] font-mono font-bold tracking-widest uppercase text-slate-500">
+                      System Truth Layer
+                    </div>
+                    
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                      <div>
+                        <h4 className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">System Status</h4>
+                        <div className={`text-2xl font-black uppercase tracking-tight ${projectState.current_status === 'High Risk' ? 'text-red-600 dark:text-red-400' : projectState.current_status === 'Good' ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                          {projectState.current_status}
+                        </div>
+                      </div>
+                      
+                      <div className="flex gap-6">
+                        <div>
+                          <h4 className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">Confidence</h4>
+                          <div className="text-xl font-bold font-mono">
+                            {Math.round(projectState.confidence_score * 100)}%
+                          </div>
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1">Reports</h4>
+                          <div className="text-xl font-bold font-mono">
+                            {projectState.report_count}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {projectState.is_conflicting && (
+                      <div className="mt-4 bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 border-2 border-red-300 dark:border-red-800 p-2 text-sm font-bold font-mono uppercase flex items-center gap-2">
+                        <span className="text-xl">⚠️</span> Conflicting Reports Detected
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Progress */}
                 <div className="mt-8 space-y-3 relative z-0">

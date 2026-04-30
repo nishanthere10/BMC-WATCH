@@ -1,4 +1,4 @@
-import { getProjectById } from "@/lib/projects";
+import { getProjectById, getProjectState } from "@/lib/projects";
 import { notFound } from "next/navigation";
 import ProjectDetailClient from "./project-detail-client";
 
@@ -10,5 +10,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
     notFound();
   }
 
-  return <ProjectDetailClient project={project} />;
+  const projectState = await getProjectState(project.id);
+
+  return <ProjectDetailClient project={project} projectState={projectState} />;
 }

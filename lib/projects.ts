@@ -143,3 +143,19 @@ export async function getFilterOptions() {
     wards: unique(wardsRes.data, "ward").sort(),
   };
 }
+
+// ─── Get project state (Truth Layer) ───────────────────────────────────
+export async function getProjectState(projectId: string) {
+  const { data, error } = await supabase
+    .from("project_state")
+    .select("*")
+    .eq("project_id", projectId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Error fetching project state:", error.message);
+    return null;
+  }
+
+  return data;
+}
