@@ -55,15 +55,13 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
         
         {/* Header Strip */}
         <div className="cr-card p-6 sm:p-8 relative overflow-hidden">
-          {/* Decorative background */}
-          <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-          
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 relative z-10">
-            {/* Avatar Placeholder */}
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#2563EB] to-[#38BDF8] p-1 shadow-lg shrink-0">
-              <div className="w-full h-full bg-white dark:bg-slate-900 rounded-full flex items-center justify-center border-4 border-white dark:border-slate-800">
-                <UserCircle size={48} className="text-[#2563EB] dark:text-[#38BDF8]" />
-              </div>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+            {/* Avatar — Brutalist square */}
+            <div className="w-20 h-20 rounded-xl bg-[#0055A4] dark:bg-[#38BDF8]/20
+              border-2 border-[#0055A4] dark:border-[#38BDF8]
+              shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] dark:shadow-[4px_4px_0px_0px_rgba(56,189,248,0.15)]
+              flex items-center justify-center shrink-0">
+              <UserCircle size={44} className="text-white dark:text-[#38BDF8]" />
             </div>
 
             <div className="flex-1 space-y-2">
@@ -99,8 +97,8 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
                   </div>
                 )}
               </div>
-              <div className="flex items-center gap-2 text-sm font-medium text-slate-500 dark:text-slate-400 font-mono bg-slate-100/50 dark:bg-slate-800/50 w-fit px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700">
-                <ShieldCheck size={14} className="text-emerald-500" />
+              <div className="inline-flex items-center gap-2 cr-badge cr-badge-resolved">
+                <ShieldCheck size={11} />
                 {t('profile.verified_citizen')} • {profile.email}
               </div>
             </div>
@@ -109,43 +107,46 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
+            whileHover={{ y: -3, transition: { duration: 0.15 } }}
             className="cr-card p-6 flex flex-col items-center justify-center text-center gap-2"
           >
-            <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-[#2563EB] dark:text-[#38BDF8] rounded-xl flex items-center justify-center mb-1">
-              <Award size={24} />
+            <div className="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-[#0055A4] dark:text-[#38BDF8] rounded-xl border-2 border-blue-200 dark:border-blue-800 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.08)] flex items-center justify-center mb-1">
+              <Award size={22} />
             </div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{t('profile.total_points')}</p>
-            <p className="text-3xl font-extrabold font-mono text-slate-900 dark:text-white">{profile.total_points.toLocaleString()}</p>
+            <p className="cr-section-title">{t('profile.total_points')}</p>
+            <p className="text-3xl font-black font-mono text-slate-900 dark:text-white">{profile.total_points.toLocaleString()}</p>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
+            whileHover={{ y: -3, transition: { duration: 0.15 } }}
             className="cr-card p-6 flex flex-col items-center justify-center text-center gap-2"
           >
-            <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-500 rounded-xl flex items-center justify-center mb-1">
-              <StarIcon size={24} />
+            <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-xl border-2 border-emerald-200 dark:border-emerald-800 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.08)] flex items-center justify-center mb-1">
+              <StarIcon size={22} />
             </div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{t('profile.current_rank')}</p>
-            <p className="text-xl font-extrabold font-heading text-slate-900 dark:text-white mt-1 break-words leading-tight">{profile.badge_rank}</p>
+            <p className="cr-section-title">{t('profile.current_rank')}</p>
+            <p className="text-xl font-black font-heading text-slate-900 dark:text-white mt-1 break-words leading-tight">{profile.badge_rank}</p>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
+            whileHover={{ y: -3, transition: { duration: 0.15 } }}
             className="cr-card p-6 flex flex-col items-center justify-center text-center gap-2"
           >
-            <div className="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 text-amber-500 rounded-xl flex items-center justify-center mb-1">
-              <History size={24} />
+            <div className="w-12 h-12 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 rounded-xl border-2 border-amber-200 dark:border-amber-800 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.08)] flex items-center justify-center mb-1">
+              <History size={22} />
             </div>
-            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{t('profile.total_audits')}</p>
-            <p className="text-3xl font-extrabold font-mono text-slate-900 dark:text-white">{profile.total_ratings}</p>
+            <p className="cr-section-title">{t('profile.total_audits')}</p>
+            <p className="text-3xl font-black font-mono text-slate-900 dark:text-white">{profile.total_ratings}</p>
           </motion.div>
         </div>
 
@@ -159,8 +160,8 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
           </div>
 
           {userRatings.length === 0 ? (
-            <div className="cr-card p-10 text-center flex flex-col items-center justify-center">
-              <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
+            <div className="cr-card-flat p-12 text-center flex flex-col items-center justify-center">
+              <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 rounded-xl shadow-[2px_2px_0px_0px_rgba(0,0,0,0.06)] flex items-center justify-center mb-4">
                 <StarIcon size={24} className="text-slate-400" />
               </div>
               <h4 className="font-bold text-slate-700 dark:text-slate-300 mb-2">{t('profile.no_audits')}</h4>
@@ -173,11 +174,12 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
             <div className="grid gap-4">
               {userRatings.map((r, i) => (
                 <motion.div
-                  key={r.id}
-                  initial={{ opacity: 0, y: 10 }}
+                  key={`${r.id}-${i}`}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 * i }}
-                  className="cr-card overflow-hidden hover:border-[#2563EB]/40 transition-colors"
+                  transition={{ delay: 0.08 * i, duration: 0.3 }}
+                  whileHover={{ y: -2, transition: { duration: 0.15 } }}
+                  className="cr-card overflow-hidden"
                 >
                   <div className="flex flex-col sm:flex-row">
                     {/* Image Thumbnail */}
@@ -232,7 +234,7 @@ export default function ProfileClient({ initialProfile, userRatings }: ProfileCl
                         )}
                         
                         {/* Rating and Comment */}
-                        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl px-4 py-3 border border-slate-100 dark:border-slate-800">
+                        <div className="bg-slate-50 dark:bg-slate-900/50 rounded-xl px-4 py-3 border-2 border-slate-200 dark:border-slate-700">
                           <div className="flex gap-0.5 mb-1.5">
                             {[...Array(5)].map((_, idx) => (
                               <StarIcon

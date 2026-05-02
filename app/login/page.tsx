@@ -102,7 +102,7 @@ function LoginContent() {
         </p>
 
         {/* Form Panel */}
-        <div className="cr-card p-6">
+        <div className="cr-auth-panel">
           <AnimatePresence mode="wait">
 
             {/* Email Stage */}
@@ -216,8 +216,8 @@ function LoginContent() {
                 <button
                   type="submit"
                   disabled={otp.length !== 6 || loading}
-                  className="w-full h-12 flex items-center justify-center gap-2 text-base font-bold rounded-xl border-2 border-transparent text-white transition-all duration-150 disabled:opacity-40 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)] hover:translate-y-[2px]"
-                  style={{ backgroundColor: "#1A7A3E" }}
+                  className="cr-btn-accent w-full h-12 flex items-center justify-center gap-2 text-base"
+                  style={{ backgroundColor: "var(--cr-india-green)" }}
                 >
                   {loading ? "Verifying…" : "Verify & Login"}
                 </button>

@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { CheckCircle2, ArrowLeft, LayoutList, Share2, Sparkles, Star, Trophy } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface RatingSuccessProps {
   rating: number;
@@ -14,18 +13,16 @@ interface RatingSuccessProps {
 export default function RatingSuccess({ rating, points, onBack, onViewFeed }: RatingSuccessProps) {
   return (
     <div className="flex flex-col items-center justify-center py-8 text-center space-y-6">
-      {/* Glowing Success Icon */}
+      {/* Neo-brutalist Success Icon */}
       <motion.div
         initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1, rotate: [0, 10, -10, 0] }}
-        transition={{ 
-          default: { type: "spring", stiffness: 260, damping: 20 },
-          rotate: { type: "tween", duration: 0.5, ease: "easeInOut" }
-        }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 260, damping: 18 }}
         className="relative"
       >
-        <div className="absolute inset-0 rounded-full bg-emerald-400/30 blur-xl scale-150 animate-pulse" />
-        <div className="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.4)]">
+        <div className="relative w-20 h-20 rounded-xl bg-[#1A7A3E] dark:bg-emerald-500 flex items-center justify-center
+          border-2 border-emerald-900 dark:border-emerald-300
+          shadow-[6px_6px_0px_0px_rgba(0,0,0,0.2)] dark:shadow-[6px_6px_0px_0px_rgba(74,222,128,0.2)]">
           <CheckCircle2 size={40} className="text-white" />
         </div>
       </motion.div>
@@ -68,11 +65,14 @@ export default function RatingSuccess({ rating, points, onBack, onViewFeed }: Ra
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.9, type: "spring" }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-50 to-amber-100/80 dark:from-amber-900/20 dark:to-amber-800/20 border border-amber-200/60 dark:border-amber-700/30"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl
+              bg-amber-50 dark:bg-amber-900/20
+              border-2 border-amber-300 dark:border-amber-700
+              shadow-[3px_3px_0px_0px_rgba(0,0,0,0.08)]"
           >
             <Trophy size={16} className="text-amber-600 dark:text-amber-400" />
-            <span className="text-sm font-black text-amber-700 dark:text-amber-300">
-              +{points} Civic Points Earned!
+            <span className="text-sm font-black font-mono text-amber-700 dark:text-amber-300">
+              +{points} CIVIC POINTS EARNED
             </span>
           </motion.div>
         )}
@@ -89,26 +89,19 @@ export default function RatingSuccess({ rating, points, onBack, onViewFeed }: Ra
         transition={{ delay: 0.45 }}
         className="grid w-full gap-3"
       >
-        <Button
-          onClick={onViewFeed}
-          className="cr-btn-primary w-full h-12 gap-2"
-        >
+        <button onClick={onViewFeed} className="cr-btn-primary w-full h-12 gap-2 flex items-center justify-center">
           <LayoutList size={16} /> View Community Ratings
-        </Button>
+        </button>
         <div className="grid grid-cols-2 gap-3">
-          <Button
-            variant="outline"
+          <button
             onClick={onBack}
-            className="h-12 font-bold gap-2 rounded-xl border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+            className="cr-btn-secondary h-12"
           >
             <ArrowLeft size={15} /> Back
-          </Button>
-          <Button
-            variant="outline"
-            className="h-12 font-bold gap-2 rounded-xl border-[#2563EB]/30 text-[#2563EB] dark:text-[#38BDF8] hover:bg-blue-50 dark:hover:bg-blue-900/20"
-          >
+          </button>
+          <button className="cr-btn-secondary h-12">
             <Share2 size={15} /> Share
-          </Button>
+          </button>
         </div>
       </motion.div>
 

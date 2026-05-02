@@ -9,7 +9,7 @@ import LocationPrompt from "@/components/map/location-prompt";
 import ProjectFilters from "@/app/projects/project-filters";
 import ProjectCard from "@/app/projects/project-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { getProjects, type PaginatedProjects } from "@/lib/projects";
 import { filterByRadius } from "@/lib/geo-utils";
 import type { MapProject } from "@/types/project";

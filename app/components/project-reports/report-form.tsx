@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Star, UserCircle } from "lucide-react";
+import { AlertCircle, Loader2, Star, UserCircle } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { toast } from "sonner";
@@ -169,8 +169,8 @@ export default function ProjectRatingForm({ projectId, onSuccess }: RatingFormPr
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center py-10 text-center space-y-4">
-        <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-slate-800 flex items-center justify-center border border-blue-100 dark:border-slate-700 shadow-sm">
-          <UserCircle size={32} className="text-[#2563EB] dark:text-[#38BDF8]" />
+        <div className="w-16 h-16 rounded-xl bg-blue-50 dark:bg-slate-800 flex items-center justify-center border-2 border-blue-200 dark:border-slate-700 shadow-[4px_4px_0px_0px_rgba(0,85,164,0.1)]">
+          <UserCircle size={32} className="text-[#0055A4] dark:text-[#38BDF8]" />
         </div>
         <div>
           <h3 className="font-bold font-heading text-lg text-slate-900 dark:text-white">Login to Rate Projects</h3>
@@ -230,28 +230,30 @@ export default function ProjectRatingForm({ projectId, onSuccess }: RatingFormPr
         <Textarea
           {...register("comment")}
           placeholder={aiAnalysis?.opinion_starter || "Share your observations about this project..."}
-          className="min-h-[80px]"
+          className="min-h-[80px] cr-input resize-none"
         />
       </div>
 
       {/* Submit Button */}
-      <Button
+      <button
         type="submit"
-        className={`w-full h-14 text-lg font-bold gap-2 transition-all cr-btn ${
-          isSpam
-            ? "bg-slate-300 dark:bg-slate-700 cursor-not-allowed text-slate-500"
-            : "cr-btn-primary"
-        }`}
+        aria-disabled={isSubmitting || isAnalyzing || !!isSpam}
         disabled={isSubmitting || isAnalyzing || !!isSpam}
+        className={[
+          "w-full h-14 text-lg font-bold flex items-center justify-center gap-2 transition-all",
+          isSpam
+            ? "cr-btn border-2 border-slate-300 dark:border-slate-600 bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-500 shadow-none cursor-not-allowed"
+            : "cr-btn-primary disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none disabled:translate-y-0",
+        ].join(" ")}
       >
         {isSubmitting ? (
-          <> <Loader2 className="animate-spin" /> Submitting Evaluation... </>
+          <><Loader2 className="animate-spin" size={18} /> Submitting Evaluation...</>
         ) : isSpam ? (
-          <> Photo Not Verified </>
+          <><AlertCircle size={18} /> Photo Not Verified</>
         ) : (
-          <> <Star size={20} /> Submit Project Rating </>
+          <><Star size={20} /> Submit Project Rating</>
         )}
-      </Button>
+      </button>
     </form>
   );
 }
